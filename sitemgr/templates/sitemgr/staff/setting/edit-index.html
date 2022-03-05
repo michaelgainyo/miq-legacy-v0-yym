@@ -1,0 +1,135 @@
+
+{% extends 'sitemgr/staff/setting/base.html' %}
+{% load img_tags %}
+{% load i18n %}
+
+
+{% block ptitle %}{% trans "Edit site settings" %}{% endblock ptitle %}
+
+
+{% block tabcontent %}
+
+    <div class="">{{ block.super }}</div>
+
+    {% if tab == 'index' %}
+
+        <div class="card">
+            <div class="card-header"><h5>{% trans "Home page Carousel" %}</h5></div>
+
+            <div class="col-md-8 offset-md-2 my-5">
+                {% with cover_form as form %}
+                <form action="{% url 'sitemgr:staff_indeximage_add' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+                    <input type="hidden" name="next" value="{{ request.path_info }}">
+
+                    <div class="form-row">
+
+                        <div class="form-group col-md-7">
+                            <input type="text" class="form-control {% if form.title.errors %}is-invalid{% endif %}" id="title" placeholder="{{ form.title.help_text }}" name="{{ form.title.html_name }}">
+
+                            <div class="invalid-feedback">{{ form.title.errors.as_text }}</div>
+
+                        </div>
+
+
+                        <div class="form-group col-md-5">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input {% if form.file.errors %}is-invalid
+                                    
+                                {% endif %}" name="file" required>
+                                <label class="custom-file-label" for="file">{% trans "Choose image" %}</label>
+                                <div class="invalid-feedback">{{ form.file.errors }}</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group col-md-7">
+                            <textarea class="form-control {% if form.description.errors %}is-invalid{% endif %}" id="description" name="{{ form.description.html_name }}" rows="3" placeholder="{{ form.description.help_text }}"></textarea>
+                            <div class="invalid-feedback">{{ form.description.errors.as_text }}</div>
+                        </div>
+
+
+                        <div class="form-group col-md-5">
+                            <div class="mb-2">
+                                <input type="text" class="form-control {% if form.cta_url.errors %}is-invalid{% endif %}" id="cta-url" placeholder="{{ form.cta_url.help_text }}" name="{{ form.cta_url.html_name }}">
+
+                                <div class="invalid-feedback">{{ form.cta_url.errors.as_text }}</div>
+                            </div>
+
+                            <input type="submit" value="{% trans "Add index image" %}" class="btn-outline-secondary btn btn-block">
+                        </div>
+
+                    </div>
+                </form>
+                {% endwith %}
+            </div>
+
+            {# COVERS #}
+            {% if object.covers.count > 0 %}
+            <div class="card-footer d-flex flex-row">
+                {% for slide in object.covers.all %}
+                    <div class="card w-25 m-2">
+                        
+                        <a href="{{ slide.image.staff_edit_url }}">{% render_img slide.image cls='card-img' %}</a>
+
+                        <div class="card-body pb-2">
+                            {% if slide.description or slide.title %}
+                                <span class="font-weight-bold">{{ slide.title }}</span>
+                                <p>{{ slide.description }}</p>
+                                <span class="text-muted small">{{ slide.cta_url | urlize }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="card-footer text-right">
+                            <a href="{{ slide.staff_delete_url }}" class="btn btn-sm btn-outline-danger">
+                                <span data-feather="trash-2"></span> {% trans "Delete" %}
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        {# SECTIONS #}
+        {% include 'sitemgr/staff/setting/edit-index-sections.html' %}
+
+    {% endif %}
+
+{% endblock tabcontent %}
+
+<script>
+// {% block documentready %}
+    
+// var frm = $('#staff-edit-section');
+// frm.on('submit', function(event){
+//     event.preventDefault();
+//     $.ajax({
+//         type: frm.attr('method'),
+//         url: frm.attr('action'),
+//         data: frm.serialize(),
+
+//         success : function(response) {
+//             // window.location = response.success_url;
+//         },
+
+//         error : function(response) {
+//             console.log(response);
+//             alert('t')
+//         }
+//     });
+//     return false;
+// });
+// {% endblock documentready %}
+</script>
+
+
+
+
+
+
+
+

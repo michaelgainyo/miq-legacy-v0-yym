@@ -1,0 +1,20 @@
+
+
+{% for field in form.visible_fields %}
+<div class="form-group">
+	
+	<label for="id_{{ field.html_name }}" aria-describedby="{{ field.html_name }}">
+		{{ field.label }} {% if field.field.required == True %}*{% endif %}
+	</label>
+
+	{{ field }}
+	<div class="invalid-feedback">{{ field.errors.as_text }}</div>
+	<small id="{{ field.html_name }}-help" class="form-text text-muted">{{ field.help_text }}</small>
+</div>
+{% endfor %}
+
+{% if form.hidden_fields %}
+<div class="invisible">
+{% for field in form.hidden_fields %}{{ field }}{% endfor %}
+</div>
+{% endif %}

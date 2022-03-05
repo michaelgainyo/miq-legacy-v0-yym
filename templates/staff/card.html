@@ -1,0 +1,19 @@
+
+
+<div class="card border-0">
+<a href="{{ product.detail_url }}">
+    <div class="">
+        <img src="{{ product.display_image.url }}" class="img-fluid card-img">
+    </div>
+
+    <ul class="list-unstyled mt-2">
+        <li class="h6">
+            <a href="{{ product.detail_url }}">{{ product.name | upper }}</a>
+            <div class="float-right text-muted small">
+                {% for size in product.sizes.all %}{{ size}} {% endfor %}
+            </div>
+        </li>
+        <li class=""><span class="sign">$</span><span class="price">{{ product.price }}</span></li>
+    </ul>
+</a>
+</div>

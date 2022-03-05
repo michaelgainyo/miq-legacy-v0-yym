@@ -1,0 +1,24 @@
+{% extends "staff/base.html" %}
+{% load i18n %}
+{% load site_tags %}
+
+{% block title %}{% trans "Confirm Delet" %}e{% endblock %}
+
+{% block ptitle %}{% trans "Confirm Delete" %}{% endblock ptitle %}
+{% block btn %}{% endblock btn %}
+
+{% block content %}
+
+<p class="lead">{% blocktrans %}Are you sure you want to delete {{ model_name }} {{object}}?{% endblocktrans %}</p>
+
+<form method="post" action="">{% csrf_token %}
+    <ul class="list-inline">
+        <li class="list-inline-item">
+        	{% render_btn type='submit' cta='Delete' icn='trash-2' cls='btn-outline-danger btn-sm' %}
+        </li>
+        <li class="list-inline-item"><a href="{{ request.META.HTTP_REFERER }}" class="btn btn-outline-primary btn-sm">{% trans "Never Mind" %}</a></li>
+    </ul>
+</form>    
+
+
+{% endblock %}

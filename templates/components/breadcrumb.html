@@ -1,0 +1,29 @@
+<div class="" itemprop="breadcrumb" role="navigation" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ site.domain }}" target="_self">
+                <span>{{ site.name }}</span>
+            </a>
+        </li>
+
+        <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+            <span class="breadCrumptSeparator"> / </span>
+            <a href="" itemprop="url">
+                <span itemprop="title">{{ object_list.META }}</span>
+            </a>
+        </li>
+
+        <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+            <span class="breadCrumptSeparator"> / </span>
+            <a href="https://www.zara.com/us/en/man-tshirts-plain-l865.html" itemprop="url">
+                <span itemprop="title">{{ product.category }}</span>
+            </a>
+        </li>
+        <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb" aria-current="page">
+            <span class="breadCrumptSeparator"> / </span>
+            <a href="#main" itemprop="url">
+                <span itemprop="title">{{ product.name }}</span>
+            </a>
+        </li>
+    </ol>
+</div>

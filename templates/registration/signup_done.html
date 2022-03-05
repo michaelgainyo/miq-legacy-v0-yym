@@ -1,0 +1,29 @@
+{% extends 'sitemgr/pages/index.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Signup complete" %}{% endblock title %}
+
+
+{% block content_inner %}
+<div class="container text-center mb-3 pb-3">
+
+	<div class="my-4 lead">{% if validlink %}{% trans "You're in!" %}{% else %}{% trans "Oops!" %}{% endif %}</div>
+	
+	{% if validlink %}
+		<p>{% trans "Thank you for completing your registration" %}</p>
+
+		{% if user %}
+			<a href="{{ user.profile.edit_url }}" class="btn btn-primary mt-3">{% trans "Edit my profile" %}</a>
+		{% endif %}
+		
+		<div>
+			<a href="{% url 'accounts:login' %}" class="btn btn-outline-primary text-uppercase mt-3">{% trans "Log in now" %}</a>
+		</div>
+
+	{% else %}
+		<p>{% trans "This link is invalid" %}</p>
+	{% endif %}
+
+</div>
+{% endblock content_inner %}
+ 

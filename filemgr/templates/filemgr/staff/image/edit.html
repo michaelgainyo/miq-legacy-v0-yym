@@ -1,0 +1,48 @@
+{% extends 'staff/edit.html' %}
+{% load site_tags %}
+{% load img_tags %}
+
+{% block btn %}
+
+	{% render_a image.staff_delete_url icn='trash-2' cls='btn btn-outline-danger border-0' %}
+
+	<a href="{% url 'filemgr:staff_img_list' %}" class="btn-0 btn btn-sm">images</a>
+
+	{% if image.content_object %}
+		{% render_a image.content_object.staff_edit_url icn='back' cls='btn' cta='back' %}
+	{% endif %}
+{% endblock btn %}
+
+{% block content %}
+
+<div class="d-flex flex-column flex-md-row">
+
+<div class="d-flex flex-column-reverse flex-md-row">
+	<div class="col-md-2">
+		<img src="{{ image.url }}" class="img-fluid">
+
+		{% if image.thumbnail %}<img src="{{ image.thumbnail.url }}" class="img-fluid">{% endif %}
+		{% if image.m_file %}<img src="{{ image.m_file.url }}" class="img-fluid">{% endif %}
+		{% if image.m_thumbnail %}<img src="{{ image.m_thumbnail.url }}" class="img-fluid">{% endif %}
+	</div>
+
+	<div class="">{% render_img image cls='img-fluid' %}</div>
+</div>
+
+
+<div class="col-md-4 pr-0">{{ block.super }}</div>
+</div>
+
+{% endblock content %}
+
+<div class="row">
+	<div class="col-md-6"></div>
+	<div class="col-md-4">
+		
+
+		{% if perms.filemgr.delete_image %}
+			<a href="{{ object.staff_delete_url }}" class="btn btn-outline-danger">delete</a>
+		{% endif %}
+	</div>
+</div>
+

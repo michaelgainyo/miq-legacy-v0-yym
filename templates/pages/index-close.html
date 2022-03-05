@@ -1,0 +1,43 @@
+{% load site_tags %}
+
+
+<div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+    <header class="mb-auto">
+        {% block navbar %}{% show_navbar %}{% endblock navbar %}
+        <div class="breadcrumb">{% block breadcrumb %}[breadcrumb]{% endblock breadcrumb %}</div>
+        <div class="header">{% block header %}[header]{% endblock header %}</div>
+    </header>
+
+    <main role="main" class="">        
+        <div class="content">{% block content %}{% endblock content %}</div>
+    </main>
+
+    <footer class="mt-auto">
+    <div class="small pb-3 text-center">
+        {% block footer %}
+
+        <div id="accordion" data-children=".item" class="mt-2 mb-1">
+            <div class="item">
+                <a class="" data-toggle="collapse" data-parent="#accordion" href="#accordion1" aria-expanded="false" aria-controls="accordion1">menu</a>
+            </div>
+
+            <div id="accordion1" class="collapse {{ collapse }} pt-3" role="tabpanel">[footer]</div>
+        </div>
+
+        {% endblock footer %}
+
+    </div>
+    </footer>      
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+    

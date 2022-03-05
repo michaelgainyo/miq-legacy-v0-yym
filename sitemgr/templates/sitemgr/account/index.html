@@ -1,0 +1,219 @@
+{% extends "front.html" %}
+{% load i18n %}
+{% load site_tags %}
+
+
+{% block title %}{{ request.user.username }}{% endblock title %}
+
+<style>
+{% block css_code %}
+main{background-color: #f8f9fa!important;}
+button{background-color: transparent;}
+button:hover{cursor: pointer;}
+button .feather{width: 20px; height: 20px;}
+.timesince .feather{width: 11px; height: 11px;}
+
+@media(min-width: 1199.98px){
+    .scroll{overflow-y: auto; height: calc(100vh)}
+}
+
+{% endblock css_code %}
+</style>
+
+{% block content %}
+<div class="container">
+<div class="row">
+    
+    <nav class="col-md-3 mt-3 d-none d-md-block">
+        <div class="sidebar-sticky">
+
+            <div class="card mb-2">
+                <ul class="nav flex-column card-body p-0">
+                    <li class="nav-item d-flex align-items-center p-3">
+                        {% include "sitemgr/account/profile-photo.html" with img_url=request.user.profile.image.thumbnail.url height=50 width=50 %}
+                        <a class="nav-link" href="{{ request.user.detail_url }}">{{ request.user | capfirst }}</a>
+                    </li>
+
+                    {% if perms.sitemgr.view_profile %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ request.user.profile.detail_url }}">{% trans "View Profile" %}</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ request.user.profile.edit_url }}">{% trans "Edit account" %}</a>
+                    </li>
+                </ul>
+            </div>
+
+            {% if perms.sitemgr.view_staff %}
+            <div class="card mb-2">
+                <div class="card-header border-0 font-weight-bold">{% trans "Staff" %}</div>
+
+                <ul class="nav flex-column card-body p-0">
+                    <li class="nav-item">
+                    <a class="nav-link {% if request.path_info == '/staff/' %}active{% endif %}" href="{% url 'sitemgr:staff_dashboard' %}">
+                        {% trans "Dashboard" %} <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                </ul>
+            </div>
+            {% endif %}
+
+        </div>
+        {% block leftbar %}{% endblock leftbar %}
+    </nav>
+
+    <div class="col-md-7">
+        {% block main %}
+        <div class="scroll">
+
+            {% include 'forms/msgs.html' %}
+    
+            {# POST TABS #}
+            {% if perms.sitemgr.add_userpost %}
+            <div class="card mt-3">
+                <div class="card-header pt-1">
+                    <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link {% if tab == 'posts' %}active text-primary{% endif %}" id="posts-tab" href="{% url 'accounts:account' %}" aria-selected="true">
+                                <span data-feather='camera'></span></a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link {% if tab == 'notif' %}text-primary active{% endif %}" id="posts-tab" href="{% url 'accounts:notifications' %}" aria-selected="true">
+                                <span data-feather='mouse-pointer'></span>
+                            </a>
+                        </li>
+
+                        {% block nav_tabs %}{% endblock nav_tabs %}
+
+                    </ul>
+                </div>
+
+                {% block form %}
+                    {% include "sitemgr/account/user-post-form.html" %}
+                {% endblock form %}
+            </div>
+            {% endif %}
+
+            {# FEED #}
+            <div class="infinite-container">
+                {% block feed %}
+
+                {% for post in feed %}    
+                <div class="infinite-item">
+                <div class="card mt-3" id="{{ post.pk }}">
+
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <a href="{{ post.user.profile.detail_url }}" class="mr-2">
+                                {% include "sitemgr/account/profile-photo.html" with img_url=post.user.profile.image.thumbnail.url height=32 width=32 %}
+                            </a>
+                                
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <a href="{{ post.user.profile.detail_url }}" class="text-lowercase font-weight-bold">{{ post.user.username }}</a>
+                                    
+                                    {% if post.user.is_online %}
+                                    <div class="bg-success rounded-circle ml-2" style="width: 4px; height: 4px"></div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="small text-muted">{{ post.created|timesince }}</div>
+
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-row text-muted small">
+                            <span class="mr-2">{{ post.views.count }} click{{ post.views.count|pluralize:'s' }}</span>
+                            <span id="count-{{ post.pk }}">{{ post.comments.count }} comment{{ post.comments.count|pluralize:'s' }}</span>
+                        </div>
+                        
+                    </div>
+
+                    <a href="{{ post.detail_url }}" class="text-center">
+                        {% if 'gif' in post.image.file.url %}
+                            <img src="{{ post.image.file.url }}" class="card-img rounded-0">
+                        {% else %}
+                            <img src="{{ post.image.m_file.url }}" class="card-img rounded-0">
+                        {% endif %}
+                        
+                    </a>
+
+                    {% if post.thumbnail_is_cropped %}
+                        <a href="{{ post.detail_url }}" class="btn-outline-secondary btn btn-sm m-3 font-weight-bold border-0">See full image</a>
+                    {% endif %}
+   
+                    {% if post.description %}
+                        <div class="title-0 card-footer m-0">{{ post.render_description | safe }}</div>
+                    {% endif %}
+                </div>
+                </div>
+                {% endfor %}
+
+                {% endblock feed %}
+            </div>
+
+            <div class="loading" style="display: none;">Loading...</div>
+
+            {% if page_obj.has_next %}
+                <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">{% trans "More" %}</a>
+            {% endif %}
+        </div>
+        {% endblock main %}
+    </div>
+
+    {% block rightbar %}{% endblock rightbar %}
+
+</div>
+</div>
+
+{% block modal %}{% endblock modal %}
+
+{% endblock content %}
+
+
+<script>
+{% block documentready %}
+
+function uploadImages() {
+    $(".js-upload-photos").click(function () {
+    $("#fileupload").click();
+    });
+
+    $("#fileupload").fileupload({
+        dataType: 'json',
+        sequentialUploads: true,
+
+        start: function (e) {
+          $("#image-modal").modal("show");
+          $(".progress").removeClass("d-none");
+        },
+        stop: function (e) {
+            $(".progress").addClass("d-none");
+        },
+
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            var strProgress = progress + "%";
+            $(".progress-bar").css({"width": strProgress});
+            $(".progress-bar").text(strProgress);
+        },
+
+        done: function (e, data) {
+            if (data.result.is_valid) {
+                $('.profile-photo').attr({ src: data.result.thumb });
+            }
+        }
+    });
+
+};
+
+uploadImages();
+
+{% endblock documentready %}
+</script> 
+
+
+

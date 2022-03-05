@@ -1,0 +1,39 @@
+{% extends 'staff/list.html' %}
+
+
+{% block ptitle %}Article Categories{% endblock ptitle %}
+
+
+{% block btn %}
+	<a href="{% url 'blog:category_create' %}" class="btn-0 btn btn-sm">add category</a>
+{% endblock btn %}
+
+
+{% block card %}
+
+<tr>
+
+    <td>
+		<a href="{{ object.detail_url }}" target="_blank" class="title mb-2">{{ object.name }}</a>
+	</td>
+
+	<td><div class="text-muted">{{ object.articles.count }} articles</div></td>
+	<td><div class="text-muted">{{ object.description }}</div></td>
+
+	<td>
+		<div class="text-center">
+			<a href="{{ object.detail_url }}" target="_blank" class=" mb-1 btn btn-sm btn-outline-primary">view on site</a>
+
+			{% if perms.blog.change_category %}
+				<a href="{% url 'blog:category_edit' object.pk %}" class="mb-1 btn btn-sm btn-outline-primary">edit</a>
+			{% endif %}
+
+			{% if perms.blog.delete_article %}
+				<a href="{{ object.staff_delete_url }}" class="mb-1 btn btn-sm btn-outline-secondary">delete</a>
+			{% endif %}
+		</div>
+	</td>
+</tr>
+
+
+{% endblock card %}

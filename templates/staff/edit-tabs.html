@@ -1,0 +1,46 @@
+{% extends 'staff/edit.html' %}
+
+{% block content %}
+<div class="d-flex flex-row">
+
+
+{% block leftmenu %}{% endblock leftmenu %}
+
+<div class="flex-fill">{% include "forms/msgs.html" %}
+<div class="">
+    {% block tabnav %}{% endblock tabnav %}
+
+    <div class="tab-content p-2" id="nav-tabContent">
+    <div class="tab-pane show active" id="nav-home">
+
+    <div class="d-flex">
+
+        <div class="flex-grow-1">{% block tab %}{{ block.super }}{% endblock tab %}</div>
+
+        {% block sidetab %}{% endblock sidetab %}
+    </div>
+
+    </div>
+    </div>
+
+</div>
+</div>
+
+
+</div>
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,145 @@
+{% extends 'blog/staff/article/edit.html' %}
+{% load i18n %}
+
+{% block ptitle %}Article Insight{% endblock ptitle %}
+
+{% block btn %}{% endblock btn %}
+
+{% block tab %}
+<div class="" >
+
+<div class="mx-3">
+    <canvas class="w-100" id="myChart" width="900" height="400"></canvas>
+</div>
+
+<div class="d-flex flex-wrap my-4">
+	<div class="col-6 col-md-3">
+        <div class="lead my-1">Where did users come from</div>
+		<div class="list-group">
+			
+			{% for ref in article.top_referrers %}
+				<div class="list-group-item font-weight-light">
+					{{ ref.0 }}
+					<div class="small text-muted">
+						{% widthratio ref.1 object.views.count 100 %} %
+					</div>
+				</div>
+			{% empty %}<div class="list-group-item">{% trans "Not enough data" %}</div>{% endfor %}
+		</div>
+	</div>
+
+	<div class="col-6 col-md-3">
+        <div class="lead">Where did users go next</div>
+		<div class="list-group">
+			{% for ref in article.top_referrings %}
+				<div class="list-group-item font-weight-light">
+					{{ ref.0 }}
+					<div class="small text-muted">
+						{% widthratio ref.1 object.views.count 100 %} %
+					</div>
+				</div>
+			{% empty %}<div class="list-group-item">{% trans "Not enough data" %}</div>{% endfor %}
+		</div>
+	</div>
+</div>
+
+</div>
+{% endblock tab %}
+
+<ul class="list-group">
+<li class="list-group-item h3">Last {{ object.views.count }} Views</li>
+{% for hit in object.views.all|slice:":200" reversed %}
+
+<li class="list-group-item">
+    <a href="{{ hit.staff_detail_url }}">
+    <div class="d-flex justify-content-between">
+    <div class="small">updated: {{ hit.updated }} <br>created: {{ hit.created }}</div>
+    <div>{{ hit.visitor }} <br> {{ hit.ip }}</div>
+    <div style="overflow-x: hidden; max-width: 250px;">{{ hit.user_agent }}</div>
+    <div>{{ hit.count }}</div>
+    </div>
+    </a>
+</li>
+{% endfor %}
+</ul>
+
+
+
+
+
+<script>
+{% block documentready %}{{ block.super }}
+
+var ChartData = {
+    labels: {{ data.labels | safe }},
+    datasets: [{
+        label: 'Traffic',
+        borderColor: 'rgb(54, 162, 235)',
+        backgroundColor: 'rgb(54, 162, 235)',
+        fill: false,
+        data: {{ data.hits_count }},
+        yAxisID: 'y-axis-1',
+    }, {
+        label: 'Crawlers & Bots',
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderDash: [5, 5],
+        fill: false,
+        data: {{ data.bot_hits_count }},
+        yAxisID: 'y-axis-2'
+    }]
+};
+
+window.onload = function() {
+    var ctx = document.querySelector('#myChart').getContext('2d');
+    window.myLine = Chart.Line(ctx, {
+        data: ChartData,
+        options: {
+            responsive: true,
+            hoverMode: 'index',
+            stacked: false,
+            title: {
+                display: true,
+                text: 'Monthly performance'
+            },
+            scales: {
+                yAxes: [{
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    id: 'y-axis-1',
+                }, {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    id: 'y-axis-2',
+
+                    // grid line settings
+                    gridLines: {
+                        drawOnChartArea: false, // only want the grid lines for one axis to show up
+                    },
+                }],
+            }
+        }
+    });
+
+};
+
+{% endblock documentready %}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

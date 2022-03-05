@@ -1,0 +1,34 @@
+{% load i18n %}
+{% load blog_tags %}
+
+<nav class="d-flex flex-column align-items-start">
+	<div class="mb-4">{% show_blog_sidebar %}</div>
+
+    <nav class="nav flex-column">
+    	<div class="mb-4">
+    		<a class="nav-link" href="{% url 'accounts:account' %}">@{{ request.user.username | default:"My account" }}</a>
+
+            {% if perms.sitemgr.view_profile %}
+            <a class="nav-link" href="{{ request.user.profile.detail_url }}">{% trans "View Profile" %}</a>
+            {% endif %}
+
+            <a class="nav-link" href="{% url 'accounts:account_edit' %}">{% trans "Edit account" %}</a>
+    	</div>
+
+        <a class="nav-link" href="{{ site.aboutsetting.detail_url }}">{{ site.aboutsetting.name|default:'About' }}</a>
+
+        {% if site.settings.faq %}
+        	<a class="nav-link" href="{{ site.settings.faq_url }}">{% trans "Customer care/Faq" %}</a>
+        {% endif %}
+
+        {% if site.settings.tos %}
+        	<a class="nav-link" href="{{ site.settings.tos_url }}">{% trans "Terms and Conditions" %}</a>
+        {% endif %}
+		
+		{% if site.settings.privacy_policy %}
+			<a class="nav-link" href="{{ site.settings.privacy_url }}">{% trans "Privacy" %}</a>
+        {% endif %}
+
+    </nav>
+</nav>
+

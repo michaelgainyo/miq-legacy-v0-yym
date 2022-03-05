@@ -1,0 +1,54 @@
+{% extends 'front.html' %}
+{% load static %}
+
+
+<style type="text/css">
+{% block css_code %}
+    {{ block.super }}
+
+    a,
+    a:focus,
+    a:hover {color: white;}
+
+    /* Cover*/
+    .logo span{background-color: transparent;}
+    .logo li:last-child span:last-child{background-color: black;}
+
+    /*LOGO*/
+    .logo-wrapper{text-align: center;}
+    .logo-wrapper img{width: 74px;}
+    
+    .center{margin-top:4rem;}
+    @media (min-width: 48em) {
+        .center{margin-top:10rem;}
+    }
+
+
+    body {
+        color: white;
+        font-size: 1rem;
+        -webkit-animation: slider 30s infinite; /* Safari 4.0 - 8.0 */
+        animation: slider 30s infinite;
+        animation-direction: alternate;
+    }
+
+    /* Standard syntax */
+    @keyframes slider {
+      0%   {background-image: url({{ site.indexsetting.random_img.url }});}
+      25%  {background-image: url({{ site.indexsetting.random_img.url }});}
+      75%  {background-image: url({{ site.indexsetting.random_img.url }});}
+      100% {background-image: url({{ site.indexsetting.random_img.url }});}
+    }
+    
+{% endblock css_code %}
+</style>
+
+
+{% block title %}Official Website{% endblock %}
+
+
+{% block content %}
+<div class="center vh100">
+    <div class="display-4">{% include 'components/logo.html' %}</div> 
+</div>
+{% endblock content %}

@@ -1,0 +1,27 @@
+
+<div class="list-group">
+    <div class="list-group-item d-flex justify-content-between">
+        <div class="text-truncate lead">{{ node }} - {{ hits.count }} -- {% widthratio qs.count count 100 %}</div>
+    </div>
+
+    <form action="." method="POST" class="list-group-item">{% csrf_token %}
+        <div class="d-flex align-items-center flex-row">
+        <input type="text" value="{{ node }}" name="filter" class="form-control form-control-sm mr-2">
+        <input type="submit" value="Update" class="btn-sm btn-outline-primary border-0">
+        </div>
+
+        <input type="hidden" name="action" value="0">
+    </form>
+
+    <div class="list-group-item text-truncate">
+        {{ hits.count }} unique views
+
+        <div>{{ refs.count }} referrals</div>{{refs}}
+    </div>
+
+    {% for h in refs.all %}
+    <div class="list-group-item text-truncate">
+        {{ h.referrer }}
+    </div>
+    {% endfor %}
+</div>

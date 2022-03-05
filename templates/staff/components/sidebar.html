@@ -1,0 +1,172 @@
+
+{% load i18n %}
+{% load site_tags %}
+
+
+{% spaceless %}
+{% if request.user.is_authenticated %}
+<div class="sidebar-sticky">
+
+    <div class="my-4 text-center">
+        {% include "sitemgr/account/profile-photo.html" with img_url=request.user.profile.image.thumbnail.url height=128 width=128 %}
+    </div>
+
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.path_info == '/staff/' %}active{% endif %}" href="{% url 'sitemgr:staff_dashboard' %}">
+                <span data-feather="home"></span>
+                {% trans "Dashboard" %} <span class="sr-only">(current)</span>
+            </a>
+        </li>
+    </ul>
+
+    {% if perms.blog %}
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>{% trans "blog" %}</span>
+
+            {% if perms.blog.add_post %}
+                <a class="d-flex align-items-center text-muted" data-toggle="collapse" href="#blog" role="button" aria-expanded="false" aria-controls="blog">
+                    <span data-feather="plus-circle"></span>
+                </a>
+            {% endif %}
+
+        </h6>
+        
+        <div class="{% if 'blog' not in request.path %}collapse{% endif %}"id="blog">
+        <ul class="nav flex-column">
+
+            {% if perms.blog.view_article %}
+            <li class="nav-item ">
+                <a class="nav-link d-flex align-items-center justify-content-between {% if 'articles' in request.path_info %}active{% endif %}" href="{% url 'blog:article_list' %}">
+                    <span data-feather="book-open"></span>{% trans "Articles" %} 
+                </a>
+            </li>
+            {% endif %}
+
+            {% if perms.blog.change_category %}
+            <li class="nav-item ">
+                <a class="nav-link d-flex align-items-center justify-content-between {% if 'blog/categor' in request.path_info %}active{% endif %}" href="{% url 'blog:category_list' %}">
+                    <span data-feather="book"></span>{% trans "Categories" %} 
+                </a>
+            </li>
+            {% endif %}
+
+        </ul>
+        </div>
+    {% endif %}
+
+    {% if perms.trackr %}
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>{% trans "Analytics" %}</span>
+
+        <a class="d-flex align-items-center text-muted" data-toggle="collapse" href="#trackr" role="button" aria-expanded="false" aria-controls="trackr">
+            <span data-feather="plus-circle"></span>
+        </a>
+    </h6>
+
+    <div class="{% if 'analytics' not in request.path %}collapse{% endif %}"id="trackr">
+    <ul class="nav flex-column">
+
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.path == site.trackrsetting.staff_index_url %}text-primary{% endif %}" href="{{ site.trackrsetting.staff_index_url }}">
+                <span data-feather="bar-chart"></span>{% trans "Overview" %} 
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between" href="{% url 'trackr:hit_list' %}">
+                <span data-feather="bar-chart"></span>{% trans "Hits" %} 
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between" href="{% url 'analytics:path_list' %}"><span data-feather="activity"></span>{% trans "Paths" %} </a>
+        </li>
+
+    </ul>
+    </div>
+    {% endif %}
+
+    {% if perms.sitemgr %}
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>{% trans "Users" %}</span>
+        <a class="d-flex align-items-center text-muted" data-toggle="collapse" href="#users" role="button" aria-expanded="false" aria-controls="users">
+            <span data-feather="plus-circle"></span>
+        </a>
+    </h6>
+
+    <div class="collapse"id="users">
+    <ul class="nav flex-column">
+
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if 'user/post' in request.path_info %}active{% endif %}" href="{% url 'sitemgr:staff_userpost_review' %}">
+                <span data-feather="image"></span>{% trans "Posts" %}
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if 'user/comment' in request.path_info %}active{% endif %}" href="{% url 'sitemgr:staff_comment_review' %}">
+                <span data-feather="message-circle"></span>{% trans "Comments" %}
+            </a>
+        </li>
+
+    </ul>
+    </div>
+    {% endif %}
+
+
+    {% if perms.filemgr %}
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>{% trans "File manager" %}</span>
+        <a class="d-flex align-items-center text-muted" data-toggle="collapse" href="#file" role="button" aria-expanded="false" aria-controls="file">
+            <span data-feather="plus-circle"></span>
+        </a>
+    </h6>
+
+    <div class="collapse"id="file">
+    <ul class="nav flex-column">
+
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if 'image' in request.path_info %}active{% endif %}" href="{% url 'filemgr:staff_img_list' %}">
+                <span data-feather="aperture"></span>{% trans "Images" %}
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if 'file' in request.path_info and 'setting' not in request.path_info %}active{% endif %}" href="{% url 'filemgr:files' %}">
+                <span data-feather="file"></span>{% trans "Files" %}
+            </a>
+        </li>
+
+    </ul>
+    </div>
+    {% endif %}
+
+    {% if perms.sitemgr %}
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>{% trans "Site manager" %}</span>
+        <a class="d-flex align-items-center text-muted" data-toggle="collapse" href="#site" role="button" aria-expanded="false" aria-controls="site">
+            <span data-feather="plus-circle"></span>
+        </a>
+    </h6>
+
+    <div class="collapse"id="site">
+    <ul class="nav flex-column">
+
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if 'setting' in request.path_info %}active{% endif %}" href="{% url 'sitemgr:staff_setting_edit' site.settings.id %}">
+                <span data-feather="sliders"></span>{% trans "Settings" %}
+            </a>
+        </li>
+
+    </ul>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endif %}
+{% endspaceless %}
+
+
+

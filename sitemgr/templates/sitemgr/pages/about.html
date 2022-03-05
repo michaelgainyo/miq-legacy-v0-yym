@@ -1,0 +1,49 @@
+{% extends 'sitemgr/pages/index.html' %}
+{% load i18n %}
+
+
+{% block title %}{{ site.aboutsetting.name | capfirst }}{% endblock %}
+
+{% block content_inner %}
+
+<div class="mx-4">
+	<div class="mb-4 lead">{{ site.aboutsetting.name | capfirst }}</div>
+	<div class="row">
+		<div class="col-md-7 my-3">{{ site.aboutsetting.about | safe | linebreaks }}</div>
+	</div>
+
+	{% if site.aboutsetting.display_contact_email %}
+
+	<div class="row">
+		<div class="col-sm-8 mb-3">
+
+			<div class="my-3 font-weight-bold">{% trans "Contact us" %}</div>
+
+			<div id="contact-us" class="mb-3">
+				<p>
+					{% trans "Should you have any inquiries, kindly shoot us an email at" %} <a href="mailto:{{site.settings.contact_email}}"><u>{{ site.aboutsetting.display_contact_email }}</u></a>.
+					
+				</p><p>{% trans "We will get back to you as soon as possible" %}</p>
+			</div>
+
+		</div>
+	</div>
+
+	{% endif %}
+
+	{% if site.aboutsetting.show_contact_form %}
+	<div class="col-md-7 pl-0">
+		<form action="{{ site.aboutsetting.detail_url }}" method="post">{% csrf_token %}
+		{% include 'forms/label.html' %}
+
+		<p class="text-center">
+			<input type="submit" value="{% trans "Send" %}" class="btn btn-primary text-uppercase">
+		</p>
+		</form>
+	</div>
+	{% endif %}
+
+</div>
+{% endblock content_inner %}
+
+		

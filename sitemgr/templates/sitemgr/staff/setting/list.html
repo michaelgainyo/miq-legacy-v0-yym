@@ -1,0 +1,35 @@
+
+{% extends 'staff/list.html' %}
+{% load i18n %}
+
+
+{% block content %}
+
+
+{% with object_list.0 as site %}
+    {{site}} <a href="{{site.staff_edit_url }}">{% trans "Update" %}</a>
+{% endwith %}
+
+
+	
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,19 @@
+<form action="{% url 'blog:create' %}" method="post" enctype="multipart/form-data" class="form">{% csrf_token %}
+
+    <div class="card-body">
+
+        <input type="file" class="form-control-file mb-4" name="file" required>
+
+        <textarea name="description" class="form-control" rows="3"></textarea>
+
+        {% if next %}
+            <input type="hidden" name="next" value="{{ next }}">
+        {% endif %}
+
+    </div>
+
+    <div class="card-footer border-0 text-center">
+        <input type="submit" value="add post" class="btn btn-block btn-sm btn-primary">
+    </div>
+
+</form>

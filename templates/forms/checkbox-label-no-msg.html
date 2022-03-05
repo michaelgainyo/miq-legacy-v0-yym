@@ -1,0 +1,24 @@
+
+
+{% for field in form.visible_fields %}
+<div class="form-check form-check-inline {{ field.html_name }} {% if field.errors %}has-danger{% endif %}">
+	
+	<label class="form-check-label" for="{{ field.html_name }}" aria-describedby="{{ field.html_name }}">
+		{{ field.label }} {% if field.field.required == True %}*{% endif %}
+	</label>
+
+	{{ field.name }}
+	
+	{% if field.errors %}<div class="form-check-feedback">{{ field.errors.as_text }}</div>{% endif %}
+	
+	<small id="{{ field.html_name }}" class="form-text text-muted">{{ field.help_text }}</small>
+</div>
+{% endfor %}
+
+{% if form.hidden_fields %}
+<div class="invisible">
+{% for field in form.hidden_fields %}
+    {{ field }}
+{% endfor %}
+</div>
+{% endif %}

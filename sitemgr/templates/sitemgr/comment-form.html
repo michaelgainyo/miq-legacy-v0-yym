@@ -1,0 +1,33 @@
+{% load i18n %}
+
+{% if not request.user.is_authenticated %}
+	<form action="{% url 'accounts:login' %}" method="get">
+        <input type="hidden" name="next" value="{{ request.path_info }}">
+        <button type="submit" class="text-primary font-weight-light" style="background-color: transparent; border: 0; font-size: 1rem;">
+        	{% trans "Login to comment" %}
+        </button>
+	</form> 
+{% else %}
+
+<form method="post" id="obj-{{ obj.pk }}-com-{{ comment.pk }}-form">{% csrf_token %}
+<div class="d-flex flex-row align-items-center justify-content-between px-2 flex-fill">
+    {% include "sitemgr/account/profile-photo.html" with img_url=request.user.profile.image.thumbnail.url height=32 width=32 %}
+
+    <textarea class="form-control mx-1" rows="1" style="border-radius: 1rem;" placeholder="{% trans "What say you ..." %}" required name="body"></textarea>
+
+    <input type="hidden" name="model" value="{{ model }}">
+    <input type="hidden" name="app" value="{{ app }}">
+    <input type="hidden" name="pk" value="{{ obj.pk }}">
+
+    {% if comment %}
+        <input type="hidden" name="ppk" value="{{ comment.pk }}">
+    {% endif %}
+    <input type="hidden" name="next" value="{{ request.path }}">
+
+    <button type="button" class="btn-sm btn-outline-secondary border-0 js-comment"
+        data-url="{% url 'sitemgr:comment_create' %}">
+    <span data-feather="message-square"></span>
+    </button>
+</div>
+</form>
+{% endif %}

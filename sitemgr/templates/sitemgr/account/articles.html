@@ -1,0 +1,51 @@
+{% extends "sitemgr/account/profile.html" %}
+{% load i18n %}
+
+
+{% block tabcontent %}
+
+{% if user.articles.all %}
+
+<div class="mt-4" id="gallery">
+
+{% for article in user.articles.all %}
+
+    {% if article.publish %}
+    	<div class="card w-50 border-0 m-0 p-1" id="item">
+        	{% include 'blog/article-card.html' %}
+    	</div>
+    {% endif %}
+
+{% endfor %}
+</div>	
+
+{% else %}
+
+<div class="text-center pt-5">
+	<span class="lead">{% trans "No article found" %}</span>
+</div>
+
+{% endif %}
+
+
+
+{% endblock tabcontent %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

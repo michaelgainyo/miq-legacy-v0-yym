@@ -1,0 +1,23 @@
+{% load static %}
+
+<picture>
+
+<!-- Desktops -->
+<source media="(min-width: 992px)" srcset="{{ img.url }}">
+
+<!-- Tablets -->
+{% if img.thumbnail %}<source media="(min-width: 768px)" srcset="{{ img.thumbnail.url }}">{% endif %}
+
+<!-- Landscape Phones -->
+{% if img.m_file %}<source media="(min-width: 576px)" srcset="{{ img.m_file.url }}">{% endif %}
+
+<!-- Portrait Phones -->
+<img
+src="{{ img.url }}"
+
+{% if img.m_thumbnail %}srcset="{{ img.m_thumbnail.url }}"{% endif %}
+
+{% if id %} {{ id }}{% endif %} {% if cls %}class="{{ cls }}"{% endif %} {% if alt %}alt="{{ alt }}"{% endif %}
+>
+
+</picture>

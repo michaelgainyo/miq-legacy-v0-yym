@@ -1,0 +1,242 @@
+{% extends "staff/base.html" %}
+{% load i18n %}
+{% load site_tags %}
+
+{% block title %}{% trans "Dashboard" %}{% endblock %}
+
+{% block ptitle %}{% trans "Dashboard" %}{% endblock %}
+
+{% block btn %}{% include 'trackr/components/date-filter.html' %}{% endblock btn %}
+
+<style>
+{% block css_code %}{{ block.super }}
+.big-txt{font-size: 1.5rem; padding: 0 10px;}
+.nav-pills .nav-link.active{
+	background-color: transparent; color: #151515;
+	border-top: 2px solid #007bff; border-radius: 0;
+}
+{% endblock css_code %}
+</style>
+
+
+{% block content %}
+
+{# MESSAGES #}
+<small class="">{% include 'forms/msgs.html' %}</small>
+
+<div class="d-flex flex-column-reverse flex-md-row">
+	
+	<div class="d-flex flex-wrap flex-grow-1">
+	<div class="rounded-0 flex-fill">
+
+		{# HEADER NAV #}
+		<ul class="nav nav-pills mb-2 nav-fill d-flex flex-row card" id="pills-tab" role="tablist">
+			<li class="nav-item d-flex">
+				<a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">
+					<div class="text-muted">{% trans "Page views" %}</div>
+					<div class="big-txt">
+						{{ today.count }}/
+						<span class="text-muted small">{{ yesterday.count }}</span>
+					</div>
+				</a>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link" id="pills-status-tab" data-toggle="pill" href="#pills-status" role="tab" aria-controls="pills-status" aria-selected="false">
+					<div class="text-muted">{% trans "Online users" %}</div>
+					<div class="big-txt">
+						{{ site.settings.online_users.count }} /
+						<span class="text-muted small">{{ site.settings.online_anonymous_users.count }}</span>
+					</div>
+				</a>
+			</li>
+
+		</ul>
+
+		{# TAB CONTENT #}
+		<div class="tab-content pb-4" id="pills-tabContent">
+
+			{# ANALYTICS #}
+			<div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+
+				{# CHART #}
+				<div class="mx-3">
+					<div class="py-2 d-flex align-items-center justify-content-between">
+						{% trans "Analytics" %}
+
+						<a href="{% url 'trackr:hit_list' %}">{% trans "View hits" %}</a>
+						<a class="btn-1 border-0" href="{% url 'trackr:staff_index' %}">{% trans "Overview" %}</a>
+					</div>
+
+					<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+				</div>
+				
+				{# STATS #}
+				<div class="d-flex flex-wrap">
+					<div class="col-md-6 mb-3">
+						<ul class="list-group">
+							<li class="list-group-item d-flex justify-content-between">
+								<span class="font-weight-bold">{% trans "Top Landing Pages" %}</span>
+								<span>{% trans "Sessions" %}</span>
+							</li>
+
+							{% for hit in today.sessions_by_landing_pages.all|slice:'10' %}
+								<li class="list-group-item d-flex justify-content-between">{{ hit.path | truncatechars:50 }} <span>{{ hit.sessions_count }}</span></li>
+							{% empty %}<li class="list-group-item">{% trans "Not enough data" %}</li>{% endfor %}
+						</ul>
+					</div>
+
+					<div class="col-md-6">
+						<ul class="list-group">
+							<li class="list-group-item d-flex justify-content-between">
+								<span class="font-weight-bold">{% trans "Top Referral Sources" %}</span>
+								<span>{% trans "Sessions" %}</span>
+							</li>
+
+							{% for hit in today.sessions_by_referrers.all|slice:'10' %}
+								<li class="list-group-item d-flex justify-content-between">{{ hit.referrer | truncatechars:50 }} <span>{{ hit.sessions_count }}</span></li>
+							{% empty %}<li class="list-group-item">{% trans "Not enough data" %}</li>{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+			{# ONLINE STATUS #}
+			<div class="tab-pane fade" id="pills-status" role="tabpanel" aria-labelledby="pills-status-tab">
+				<div class="d-flex align-items-center justify-content-between">
+					<div class="lead px-3">Active right now</div>
+
+					<div class="px-3">
+						<div class="my-2">Registered users: {{ site.settings.online_users.count }}</div>
+						<div>Anonymous users: {{ site.settings.online_anonymous_users.count }}</div>
+					</div>
+				</div>
+
+				<div class="m-3 d-flex flex-wrap">
+				{% for usr in site.settings.online_users.all %}
+					<div class="d-flex align-items-center col-md-6 mb-2">
+						<a href="{{ usr.profile.detail_url }}" class="mr-2">
+                            {% include "sitemgr/account/profile-photo.html" with img_url=usr.profile.image.thumbnail.url height=32 width=32 %}
+                        </a>
+                        <span class="font-weight-bold">{{ usr.username | lower }}</span>
+					</div>
+				{% empty %}
+				{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	</div>
+
+	<div class="col-md-3">
+
+		{# INFO MESSAGES #}
+		<div class="text-info mb-3">
+		{% if not site.trackrsetting.fb_pixel_id %}
+			<div class="d-flex align-items-center mb-2">
+				<span data-feather='info' class="mr-2"></span>
+				<a href="{{ site.trackrsetting.staff_edit_url }}">{% trans "Add facebook analytics tracking" %}</a>
+			</div>
+		{% endif %}
+
+		{% if not site.trackrsetting.ga_tracking_id %}
+			<div class="d-flex align-items-center">
+				<span data-feather='info' class="mr-2"></span>
+				<a class="" href="{{ site.trackrsetting.staff_edit_url }}">{% trans "Add google analytics tracking" %}</a>
+			</div>
+		{% endif %}
+		</div>
+
+		<form action="." method="post" autocomplete="off">{% csrf_token %}
+			<input type="text" name="item" class="form-control mb-2" placeholder="{% trans "Add a task" %}" required>
+			<input type="hidden" name="next" value="{{ request.path_info }}">
+			{% include 'widgets/save-btn.html' %}
+		</form>
+
+		<ul class="list-unstyled my-4">
+			{% for todo in todo_list %}
+			<li class="mb-1">
+				<div class="d-flex justify-content-between align-items-center">
+				{{ forloop.counter }} - {{ todo }}
+				<form action="." method="post">{% csrf_token %}
+					<input name="pk" type="hidden" value="{{ forloop.counter0 }}">
+
+					<button name="action" class="btn btn-sm btn-outline-danger border-0" value="{% trans "Delete" %}">
+						<span data-feather="trash-2"></span>
+					</button>
+				 
+				</form>
+				</div>
+			</li>
+			{% endfor %}
+
+		</ul>
+	</div>
+</div>
+
+{% endblock content %}
+
+<script>
+{% block documentready %}
+(function () {
+	'use strict'
+	// var blu = 'rgba(54, 162, 235, 0.2)'
+
+	var labels = {{ chart_data.labels | safe }};
+	var barChartData = {
+	    labels: labels,
+	    datasets: [{
+	        label: 'Today',
+	        backgroundColor: 'rgba(54, 162, 235, 0.8)',
+	        borderColor: 'transparent',
+	        borderWidth: 1,
+	        data: {{ chart_data.today|escapejs }}
+	    }, {
+	        label: 'Yesterday',
+	        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+	        borderColor: 'transparent',
+	        borderWidth: 1,
+	        data: {{ chart_data.yesterday|escapejs }}
+	    }]
+
+	};
+
+	window.onload = function() {
+	    var ctx = document.querySelector('#myChart').getContext('2d');
+	    window.myBar = new Chart(ctx, {
+	        type: 'bar',
+	        data: barChartData,
+	        options: {
+	            responsive: true,
+	            legend: {
+	                position: 'bottom',
+	            },
+	            title: {
+	                display: true,
+	                text: '{{ data.title | capfirst }}'
+	            }
+	        }
+	    });
+	};
+}())
+{% endblock documentready %}
+</script>
+
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

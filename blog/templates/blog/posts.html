@@ -1,0 +1,32 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title_inner %}timeline{% endblock title_inner %}
+
+ 
+{% block content %}
+
+<div class="gallery">
+<div class="container">
+	<div class="row">
+	{% for look in looks %}
+		<div class="col-sm-6 col-md-4 col-lg-2 col-12">
+		<div class="card border-0">
+			<a href="{{ look.detail_url }}">
+			<img class="look-fluid m-2" src="{{ look.image.url }}"
+				alt="{{ look.description }}" data-bigimage="{{ look.image.url }}">
+			</a>
+		</div>
+		</div>
+	{% endfor %}
+	</div>
+</div>
+</div>
+{% include 'components/pagination.html' %}
+
+{% endblock content %}
+
+
+
+
+

@@ -1,0 +1,30 @@
+{% load i18n %}
+{% load site_tags %}
+
+
+<form action="{{ section.staff_edit_url }}" method="post" id="staff-edit-section">{% csrf_token %}
+	
+	{# {% if not section.parent %} #}
+	<input type="text" class="form-control my-1" id="section-name" placeholder="{% trans "Name" %}" name="name" value="{{ section.name }}">
+	{# {% endif %} #}
+
+	<input type="text" class="form-control my-1" id="section-title" placeholder="{% trans "Title" %}" name="title"
+	value="{% if section.title %}{{ section.title }}{% endif %}">
+
+	<textarea class="form-control my-1" id="section-text" name="text" rows="3" placeholder="{% trans "Text" %}">{% if section.text %}{{ section.text }}{% endif %}</textarea>
+
+	<input type="url" class="form-control my-1" id="section-img-url" placeholder="http://placehold.it/300x300" name="image_url" value="{% if section.image_url %}{{ section.image_url }}{% endif %}">
+
+	<input type="text" class="form-control my-1" id="section-img-alt" placeholder="{% trans "Image alt text" %}" name="image_alt_text" value="{% if section.image_alt_text %}{{ section.image_alt_text }}{% endif %}">
+	
+	<input type="text" class="form-control my-1" id="section-cta" placeholder="{% trans "Call to action" %}" name="cta"
+	value="{% if section.cta %}{{ section.cta }}{% endif %}">
+
+	<input type="url" class="form-control my-1" id="section-cta-url" placeholder="{{ site.domain }}" name="cta_url" value="{% if section.cta_url %}{{ section.cta_url }}{% endif %}">
+
+	<div class="d-flex justify-content-between align-items-center">
+		{% render_a section.staff_delete_url 'trash-2' cta='{% trans "Delete" %}' cls='btn-outline-danger border-0 btn-sm' %}
+		{% render_btn icn='save' cta='{% trans "Save" %}' cls='btn-outline-dark btn-sm' %}
+	</div>
+
+</form>

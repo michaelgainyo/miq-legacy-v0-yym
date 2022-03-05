@@ -1,0 +1,35 @@
+{% extends 'staff/detail.html' %}
+{% load i18n %}
+
+{% block ptitle %}{% trans "Hit" %}[{{ object.id }}]{% endblock ptitle %}
+
+{% with object as hit %}
+
+{% block content %}
+<ul class="list-unstyled">
+
+	<li class="mb-2">
+		<span class="title mr-3">{% trans "Created" %}</span>{{ hit.created }}
+		<span class="ml-3 title mr-3">{% trans "Updated" %}</span>{{ hit.updated }}
+	</li>
+
+	<li class="mb-2">
+		<span class="title mr-3">{% trans "User" %}</span>{{ hit.visitor }}
+		<span class="ml-3 title mr-3">{% trans "Ip address" %}</span>{{ hit.ip }}
+		<span class="ml-3 title mr-3">{% trans "Session" %}</span>{{ hit.session }}
+	</li>
+
+	<li class="mb-2">
+		<span class="title mr-3">{% trans "Path" %}</span>{{ hit.path }}
+		<span class="ml-3 title mr-3">{% trans "Count" %}</span>{{ hit.count }}
+	</li>
+
+	<li><span class="title mr-3">{% trans "Referrer" %}</span>{{ hit.referrer }}</li>
+	<li><span class="title mr-3">{% trans "User agent" %}</span>{{ hit.user_agent }}</li>
+</ul>
+
+{% trans "Source" %}: {{ hit.source }}
+
+{% endblock content %}
+    
+{% endwith %}

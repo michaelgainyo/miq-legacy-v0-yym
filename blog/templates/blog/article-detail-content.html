@@ -1,0 +1,25 @@
+<div class="mx-3 flex-grow-1">
+
+    <div class="my-3 pr-2">
+        {% if article.html %}
+            {{ article.html | safe }}
+        {% else %}
+            {{ article.description | linebreaks }}
+        {% endif %}
+    </div>
+
+
+    {% if site.blogsetting.show_artists and article.artists %}
+    <ul class="list-unstyled pt-3 small">
+        {% for artist in article.artists.all %}
+            <li>
+                {% if artist.profile.type %}
+                    <span class="text-muted">{{ artist.profile.get_type_display }}</span>
+                {% endif %}
+                <a href="{{ artist.detail_url }}">{{ artist.username }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+</div>

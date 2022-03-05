@@ -1,0 +1,83 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta name="author" content="marQetIntel">
+
+	{% block meta %}{% endblock %}
+
+	<style type="text/css">
+		{% block css_code %}{% endblock css_code %}
+	</style>
+{% endblock head %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block body %}
+<div id="back">
+	{% block body_wrapper %} 
+
+	{# SIDE NAVBAR, CONTENT #}
+	<div class="container-fluid">
+		<div class="row {% if section == 'index' %}parallax{% endif %}">
+			<div class="col-md-3 col-lg-2">
+				{% block navbar %}
+					{% include 'components/navbar.html' %}
+				{% endblock navbar %}
+			</div>
+
+			<div class="col-md-9 col-lg-10">
+				<div class="mt-3">
+					{% block header %}
+						<span class="h5">
+							{% block header_title %}{% endblock header_title %}
+						</span>
+
+						<small class="float-right h6">
+							{% block header_btn %}{% endblock header_btn %}
+						</small>
+
+					{% endblock header %}
+				</div>
+
+				<div id="content" class="mb-3">
+					{% if user.is_authenticated %}
+						{% block content %}
+						{% endblock content %}
+					{% else %}
+						<p>You are not allowed to view this content</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="footer-wrapper">
+		{% block footer %}
+			{% include 'components/footer.html' %}
+		{% endblock footer %}
+	</div>
+
+	{% endblock body_wrapper %}
+</div>
+{% endblock body %}
+
+
+
+
+
+
+
+
+
+
+
+
+

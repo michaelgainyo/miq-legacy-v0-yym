@@ -1,0 +1,128 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% load site_tags %}
+
+{% block title %}{{ post.user }}{% if post.description %} - "{{ post.description }}"{% endif %}{% endblock title %}
+
+
+{% block css_code %}
+{{ block.super }}
+
+.comment-reply{display: none;}
+.btn-delete{background-color: transparent}
+{% endblock css_code %}
+
+{% block content %}
+
+<div class="container-fluid mb-5">
+
+	<div class="row">
+
+		<div class="col-md-8">
+
+			<div class="text-center">
+				<a href="{{ post.user.detail_url }}">{{ post.images.first.render }}</a>
+			</div>
+			
+		</div>
+
+		<div class="col-md-4 post-info">
+			<ul class="list-unstyled">
+
+				<li class="d-flex justify-content-between">
+					{{ post.views.count }} view{{ post.views.count|pluralize:'s' }}
+
+					{% if request.user == post.user or request.user.is_superuser %}
+
+					<form action="{{ post.delete_url }}" method="post" class="ml-1">{% csrf_token %}
+						<input type="hidden" name="active" value="off">
+						<button type="submit" class="btn-delete pl-0 text-muted border-0">delete post</button>
+					</form>
+
+					{% endif %}
+
+				</li>
+
+				<li><b><a class="mr-2" href="{{ post.user.detail_url }}">{{ post.user.username }}</a></b>{{ post.render_description | safe }}</li>
+
+			</ul>
+
+			<div>{% include 'sitemgr/comment.html' %}</div>
+
+		</div>
+
+		{% if related %}
+			<div class="">
+				<span class="d-block text-muted mt-3 mb-3">more from {{ post.user }}</span>
+
+				<div class="" id="gallery">
+
+					{% for post in related %}
+
+						<div class="card w-50 border-0 m-0 p-1" id="item">
+							<a href="{{ post.detail_url }}">{{ post.images.first.render_thumb }}</a>
+						</div>
+
+					{% endfor %}
+
+				</div>
+			</div>
+		{% endif %}
+
+	</div>
+
+</div>
+
+{% endblock content %}
+
+
+{% block documentready %}
+$(function() {
+    $('.comment-reply-btn').click(function(event){
+        event.preventDefault();
+        $(this).parent().next('.comment-reply').fadeToggle();
+    });
+});
+
+var $container = $('#gallery');
+  $container.masonry({
+      columnWidth: '#item',
+      itemSelector: '#item'
+    }); 
+
+$container.imagesLoaded(function() {
+  $container.masonry('layout');
+    
+});
+{% endblock documentready %}
+
+
+
+
+{% if request.user.is_authenticated %}
+	<form action="{{ post.get_absolute_url }}" method="post">{% csrf_token %}
+		{% include 'forms/placeholder.html' %}
+		<input type="submit" class="btn btn-primary" value="Post Comment">
+	</form>
+{% else %}
+	<br>
+	<a href="{% url 'authentication:login' %}">Login</a> to comment
+{% endif %}
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

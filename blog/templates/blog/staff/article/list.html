@@ -1,0 +1,107 @@
+{% extends 'staff/list.html' %}
+{% load site_tags %}
+{% load img_tags %}
+
+{% block ptitle %}Articles{% endblock ptitle %}
+
+
+{% block btn %}
+<button type="button" class="btn-0 btn btn-sm" data-toggle="modal" data-target="#add-article">
+    <div class="d-flex align-items-center">
+        <span data-feather="plus-circle" class="mr-2"></span>Add article
+    </div>
+</button>
+
+<div class="btn-group ml-2">
+<button type="button" class="badge badge-pill p-1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false" style="color: #007bff; border: 1px solid #007bff;">
+	<span data-feather="more-horizontal"></span>
+</button>
+<div class="dropdown-menu dropdown-menu-right mt-3">
+	<a class="dropdown-item" href="#">Settings</a>
+</div>
+</div>
+{% endblock btn %}
+
+{% block content %}
+
+<div class="container-fluid">
+<div class="row" id="masonry-gallery">
+
+{% for object in object_list %}
+<div class="col-6 col-md-3" id="item">
+	<div class="card">
+
+		{% render_img object.image cls='card-img rounded-0' %}
+
+		<div class="card-body d-flex justify-content-between">
+		
+			<div>
+			{% if object.publish %}
+			{% render_a url=object.detail_url icn='eye' cls='btn-outline-info' a_title='View on site' new='true' %}
+			{% endif %}
+			</div>
+
+        	{% render_a url=object.staff_images_upload_url icn='image' cls='btn-outline-secondary' a_title='Add Images' %}
+
+	        {% if perms.blog.change_article %}
+	        {% render_a object.staff_edit_url icn='edit' cta='' cls='btn btn-outline-primary' %}
+	        {% endif %}
+	    </div>
+
+		<div class="card-body text-center border-top">
+			<h6>{{ object.title }}</h6>
+			{% if object.is_explicit %}<span class="text-danger ml-2">18+</span>{% endif %}
+		</div>
+
+		{% if not object.publish %}<div class="text-danger card-body border-top">unpublished</div>{% endif %}
+
+		<div class="card-footer">
+			<div class="d-flex justify-content-between align-items-center">
+	    		{% if perms.blog.delete_article %}
+		        {% render_a object.staff_delete_url icn='trash-2' cta='' cls='btn-outline-danger' %}
+		        {% endif %}
+	    		<div>{{ object.views.count }} views</div>
+    		</div>
+		</div>
+	</div>
+	
+</div>
+{% empty %}
+	<div class="list-group-item">No articles</div>
+{% endfor %}
+
+</div>
+</div>
+
+{% include "components/pagination.html" with page=page_obj %}
+
+{% endblock content %}
+
+
+{% block modal %}
+<!-- Modal -->
+
+<form action="{% url 'blog:article_create' %}" method="post">{% csrf_token %}
+<div class="modal fade" id="add-article" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+
+    <div class="modal-header text-center">
+        <h6 class="modal-title">New Article</h6>
+        <p class="small text-muted">Please choose a category and name your new article</p>
+    </div>
+
+    <div class="modal-body">
+        {{ articleform.as_p }}
+        <input type="hidden" name="next" value="{{ request.path }}" />
+    </div>
+
+    <div class="modal-footer text-center">
+        <input type="submit" class="btn btn-primary btn-sm" value="Save">
+    </div>
+
+</div>
+</div>
+</div>
+</form>
+{% endblock modal %}

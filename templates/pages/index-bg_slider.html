@@ -1,0 +1,102 @@
+{% extends 'front.html' %}
+{% load static %}
+
+
+{% block title %}Official Website{% endblock %}
+
+
+{% block breadcrumb %}{% endblock breadcrumb %}
+{% block header %}{% endblock header %}
+
+<style>
+{% block css_code %}
+
+.body-wrapper{
+	box-shadow: inset 0 0 5rem rgba(0, 0, 0, .1);
+	color: white;
+    font-size: 1.1rem;
+    -webkit-animation: slider 30s infinite; /* Safari 4.0 - 8.0 */
+    animation: slider 30s infinite;
+    animation-direction: alternate;
+
+    display: -ms-flexbox;
+    display: -webkit-box;
+    display: flex;
+    height: 100vh;
+    -ms-flex-pack: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+
+    background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+}
+
+{# a, #}
+{# a:focus, #}
+{# a:hover, #}
+.cta,
+.nav-link, .logo{color: white!important;}
+
+@keyframes slider {
+	{% if slider.0 %}
+		0%   {background-image: url({{ slider.0.url }});}	
+	{% endif %}
+
+	{% if slider.2 and not slider.3 %}
+		50%  {background-image: url({{ slider.2.url }});}
+	{% endif %}
+
+	{% if slider.2 and slider.3 %}
+		25%  {background-image: url({{ slider.2.url }});}
+		75%  {background-image: url({{ slider.3.url }});}
+	{% endif %}
+
+	{% if slider.1 %}
+		100% {background-image: url({{ slider.1.url }});}
+	{% endif %}
+}
+
+{% endblock css_code %}
+</style>
+
+
+{% block content %}
+
+<div class="container-fluid">
+{% if slider %}
+	<div class="text-center"></div>
+{% else %}
+	<div class="text-center">
+		<h1>Background Slider</h1>
+	</div>
+{% endif %}
+
+</div>
+
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

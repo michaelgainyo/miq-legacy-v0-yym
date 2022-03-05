@@ -1,0 +1,10 @@
+<form method="POST" action="{{ img.staff_delete_url }}">{% csrf_token %}
+    <input type="hidden" name="pk" value="{{ img.pk }}" />
+    <input type="hidden" name="next" value="{{ request.path }}" />
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete">
+        	<span data-feather="trash-2"></span>
+        </button>
+    </div>
+</form>

@@ -1,0 +1,115 @@
+{% extends 'registration/login.html' %}
+{% load i18n %}
+
+{% block css_code %}
+{{ block.super }}
+
+#password1 ul{padding: 0;}
+#password1 li{list-style: none;}
+{% endblock css_code %}
+
+
+{% block title %}{% trans "Create an account" %}{% endblock %}
+
+
+{% block form %}
+<form class="form" id="form-signup" method="post" action="{% url 'accounts:register' %}">{% csrf_token %}
+
+<div class="d-flex align-items-center justify-content-between px-4">
+	<span class="lead">{% trans "Create an account" %}</span>
+
+	<div>{% trans "or" %} <a class="text-primary" href="{% url 'accounts:login' %}">{% trans "log in" %}</a></div>
+</div>
+
+<div class="card-body mt-2">
+	{% include 'forms/label-no-msg.html' %}
+
+	{% if site.settings.require_login %}
+	<div class="form-check mt-3 mb-4">
+		<input class="form-check-input" type="checkbox" name="agree" id="agree" required>
+		<label class="form-check-label" for="agree">{% trans "I am over 18, or of the consenting adult age within my country" %}.*</label>
+	</div>
+	{% endif %}
+
+	<button type="submit" class="btn btn-primary btn-block">{% trans "Create an account" %}</button>
+
+</div>
+
+</form>
+
+{% endblock form %}
+
+
+<script>
+{% block documentready %}
+
+var form = $('#form-signup');
+var username = $('#id_username').on('keyup', function(){
+
+	var form = $(this).closest("form");
+	$.ajax({
+        url: form.attr("action"),
+        data: form.serialize(),
+        type: form.attr("method"),
+        dataType: 'json',
+        success: function (data) {
+            if (data.is_valid){
+            } else {
+
+            	var msg = $('.invalid-feedback')
+            	var data = $.parseJSON(data.messages);
+
+            	if (!data['username']){
+            		username.addClass('is-valid');
+            		username.removeClass('is-invalid');
+            	} else {
+            		username.addClass('is-invalid');
+            		username.removeClass('is-valid');
+            		msg.html(data['username'][0].message)
+            	}
+	        	// console.log(data['username'][0].message);
+            }
+            
+        },
+        error: function(data){
+        	console.log(data);
+
+        }
+    });
+})
+
+{% endblock documentready %}
+</script>
+
+
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>{% trans "Your account doesn't have access to this page. To proceed, please login with an account that has access" %}.</p>
+    {% else %}
+    <p>{% trans "Please login to see this page" %}.</p>
+    {% endif %}
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

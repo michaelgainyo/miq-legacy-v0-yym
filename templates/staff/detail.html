@@ -1,0 +1,18 @@
+{% extends "staff/base.html" %}
+{% load i18n %}
+ 
+
+{% block title %}{{ model_name }}{% endblock %}
+
+
+{% block ptitle %}{{ model_name }}{% endblock ptitle %}
+
+{% block content %}
+
+<div class="card">
+	<div class="card-body"><div class="chart"></div></div>
+
+	<div class="card-body">{{ object }}</div>
+</div>
+
+{% endblock content %}

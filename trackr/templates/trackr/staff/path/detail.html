@@ -1,0 +1,54 @@
+{% extends 'staff/detail.html' %}
+
+{% block ptitle %}path {{ object.id }} hits{% endblock ptitle %}
+
+{% block btn %}
+	<a href="{% url 'trackr:path_list' %}" class="btn btn-sm btn-outline-primary">view paths</a>
+{% endblock btn %}
+
+
+{% block content %}
+
+<div>
+{{ object.name }}: <span class="text-muted">{{ object.path }}</span>
+</div>
+
+<table class="table mt-3">
+
+<thead>
+<tr>
+<th scope="col">updated/created</th>
+<th scope="col">visitor</th>
+<th scope="col">referrer</th>
+<th scope="col">count</th>
+<th scope="col">user agent</th>
+</tr>
+</thead>    
+
+<tbody>
+{% for hit in object_list %}
+<tr>
+    <td class="small">{{ hit.updated }} <br> {{ hit.created }}</td>
+
+    <td>{{ hit.visitor }} <br> {{ hit.ip }}</td>
+
+    <td>{{ hit.referrer | truncatechars:30 }}</td>
+
+    <td>{{ hit.count }}</td>
+
+    <td>{{ hit.user_agent }}</td>
+</tr>
+{% empty %}
+	<tr>
+	    <td class="title">not enough data</td>
+	</tr>
+{% endfor %}
+</tbody>
+
+</table>
+
+{% include "components/pagination.html" with page=page_obj %}
+
+
+
+{% endblock content %}

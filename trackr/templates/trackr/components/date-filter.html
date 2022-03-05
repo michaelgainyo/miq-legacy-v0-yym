@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<div class="btn-group" id="date-filter">
+<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false" data-range="{{ range }}">
+	<span data-feather="calendar"></span>
+	{% if range == 'yesterday' %}{% trans "Yesterday" %}
+	{% elif range == 'week' %}{% trans "Last 7 days" %}
+	{% elif range == 'month' %}{% trans "This month" %}
+	{% elif range == 'lifetime' %}{% trans "Lifetime" %}{% else %}{% trans "Today" %}{% endif %}
+</button>
+<div class="dropdown-menu dropdown-menu-right">
+	<a class="dropdown-item" href="{{ request.path }}?range=today">{% trans "Today" %}</a>
+	<a class="dropdown-item" href="{{ request.path }}?range=yesterday">{% trans "Yesterday" %}</a>
+	<a class="dropdown-item" href="{{ request.path }}?range=week">{% trans "Last 7 days" %}</a>
+	{# <a class="dropdown-item" href="{{ request.path }}?range=month">{% trans "This month" %}</a> #}
+	<a class="dropdown-item" href="{{ request.path }}?range=lifetime">{% trans "Lifetime" %}</a>
+</div>
+</div>

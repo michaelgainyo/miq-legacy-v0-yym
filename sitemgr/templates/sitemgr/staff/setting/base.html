@@ -1,0 +1,117 @@
+
+{% extends 'staff/edit.html' %}
+{% load i18n %}
+
+
+{% block ptitle %}{% trans "Edit site settings" %}{% endblock ptitle %}
+
+{% block css_code %}
+
+{{ block.super }}
+.active{border-top: 1px;}
+{% endblock css_code %}
+
+
+{% block content %}
+    
+    <div class="nav-primary">
+    <ul class="nav nav-pills" id="nav-tab" role="tablist">
+
+        {% if site.settings.staff_edit_url %}
+            <li class="nav-item">
+                <a class="nav-link {% if tab == 'general' %}active{% endif %}" href="{{ site.settings.staff_edit_url }}">General</a>
+            </li>
+        {% endif %}
+
+        {% if site.indexsetting.staff_edit_url %}
+            <li class="nav-item">
+                <a class="nav-link {% if tab == 'index' %}active{% endif %}" href="{{ site.indexsetting.staff_edit_url }}">
+                    Index
+                </a>
+            </li>
+        {% endif %}
+
+        {% if site.aboutsetting.staff_edit_url %}
+            <li class="nav-item">
+                <a class="nav-link {% if tab == 'about' %}active{% endif %}" href="{{ site.aboutsetting.staff_edit_url }}">
+                    About
+                </a>
+            </li>
+        {% endif %}
+
+        <li class="nav-item">
+            <a class="nav-link {% if tab == 'file' %}active{% endif %}" href="{{ site.filesetting.staff_edit_url }}">
+                Files & Images
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {% if tab == 'users' %}active{% endif %}" href="{{ site.postsetting.staff_edit_url }}">Users</a>
+        </li>
+
+    </ul>
+    </div>
+
+    <div class="" id="tab-content">
+                
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+            {% block tabcontent %}
+                
+                <div class="card card-body rounded-0">
+                {% if form %}
+                    {% include 'forms/msgs.html' %}
+
+                    <form action="{% if object %}{{object.staff_edit_url}}{% else %}.{% endif %}" method="post" enctype="multipart/form-data" class="">{% csrf_token %}
+
+                        {% block form_fields %}
+
+                            {% include 'forms/label.html' %}
+
+                        {% endblock form_fields %}
+                        
+                        {% block form_btn %}
+
+                            <p>
+                              <input type="submit" value="{% if form_btn_value %}{{ form_btn_value }}{% else %}save{% endif %}" class="btn btn-primary text-uppercase">
+                            </p>
+
+                        {% endblock form_btn %}
+                    
+                    </form>
+                {% endif %}
+                </div>
+
+            {% endblock tabcontent %}
+
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

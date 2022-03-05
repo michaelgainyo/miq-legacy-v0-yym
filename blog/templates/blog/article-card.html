@@ -1,0 +1,56 @@
+{% load img_tags %}
+
+<article>
+
+    {% if article.image %}
+
+    <a href="{{ article.detail_url }}">{% render_img article.image cls='card-img rounded-0' %}</a>
+
+    {% endif %}
+
+    <div class="card-body">
+        {% if not category and site.blogsetting.show_category %}
+            <div class="mb-2 text-muted">{{ article.category.name }}</div>
+        {% endif %}
+
+        <div class="text-center">
+            <a href="{{ article.detail_url }}" class="h6">{{ article.title | upper }}</a>
+        </div>
+        
+        {% if site.blogsetting.show_date_posted %}
+            <span class="small d-block">{{ article.created | timesince }} ago</span>
+        {% endif %}
+
+        {% if site.blogsetting.show_artists and article.artists %}
+            <ul class="list-unstyled mt-2">
+                {% for artist in article.artists.all %}
+                    <li>
+                        <span class="text-muted small">{{ artist.profile.get_type_display }}</span> - 
+                        <a href="{{ artist.detail_url }}">{{ artist.username }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if site.blogsetting.show_image_count and article.images.count > 0 %}
+            <span class="text-muted small">{{ article.images.count }} photos</span>
+        {% endif %}
+
+        {% if site.blogsetting.show_excerpt and article.description %}
+            <p>{{ article.description | safe | truncatewords:"60" }}</p>
+        {% endif %}
+
+        {% comment %}
+        {% if request.user.is_staff or request.user in article.artists.all or request.user == article.user %}
+        <div class="d-flex align-items-center text-muted">
+            <span class="small d-block mr-2">{{ article.views.count }}</span>
+            <span data-feather="eye" style="width:12px; height: 12px;"></span>
+        </div>
+        {% endif %}
+        {% endcomment %}
+
+    </div>
+
+
+</article>
+

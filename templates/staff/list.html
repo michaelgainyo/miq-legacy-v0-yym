@@ -1,0 +1,44 @@
+{% extends "staff/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ model_name_plural }}{% endblock %}
+
+{% block ptitle %}{{ model_name_plural }}{% endblock %}
+
+
+{% block content %}
+
+<div class="card table-responsive border-top-0">
+<table class="table table-sm">
+
+<thead>
+<tr>
+{% block thead %}{% endblock thead %}
+</tr>
+</thead>    
+
+<tbody>
+{% for object in object_list %}
+    {% block card %}
+    	<tr>
+		    <td>
+		    	<a href="{{ object.staff_detail_url }}">{{ object }}</a>
+		    </td>
+		</tr>
+	{% endblock card %}
+{% empty %}
+	<tr>
+	    <td>{% trans "Not enough data" %}</td>
+	</tr>
+{% endfor %}
+</tbody>
+
+</table>
+</div>
+
+{% include "components/pagination.html" with page=page_obj %}
+
+{% endblock content %}
+
+
+

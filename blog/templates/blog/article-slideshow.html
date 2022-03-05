@@ -1,0 +1,75 @@
+{% extends 'blog/article-base.html' %}
+{% load img_tags %}
+
+{% block article_content %}
+
+<div class="container px-0">
+<div class="d-flex {% if article.text_first %}flex-column-reverse{% else %}flex-column{% endif %}">
+
+    
+    {% if article.gallery.is_slider %}
+    <div id="article-carousel" class="carousel carousel-fade slide" data-interval="false">
+        <div class="carousel-inner">
+
+        {% for slide in article.gallery.images.all %}
+        <div class="carousel-item {% if forloop.counter0 == 0 %}active{% endif %} d-flex flex-column flex-md-row">
+            <div class="col-md-7 px-0">
+                <img src="{{ slide.url }}" class="d-block card-img mb-3 rounded-0" alt="{{ site.name }}">
+                
+                {% if article.gallery.images.count > 1 %}
+                <a class="carousel-control-prev" href="#article-carousel" role="button" data-slide="prev">
+                    <span aria-hidden="true" data-feather="chevron-left" style="width: 30px; height: 30px;"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#article-carousel" role="button" data-slide="next">
+                    <span aria-hidden="true" data-feather="chevron-right" style="width: 30px; height: 30px;"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+                {% endif %}
+
+            </div>
+
+            {% if slide.title or slide.description %}
+            <div class="col-md-5">
+
+                {% if slide.title %}<h3>{{ slide.title }}</h3>{% endif %}
+
+                {% if slide.description %}<div>{{ slide.description | safe }}</div>{% endif %}
+            </div>
+            {% endif %}
+
+        </div>
+        {% endfor %}
+        
+        </div>
+
+    </div>
+    {% else %}
+    <div class="d-flex flex-column">
+    {% for slide in article.gallery.images.all %}
+        <div class="py-4">
+            {% include 'blog/article-detail-image.html' with image=slide %}
+            {% if slide.title %}<h3 class="mt-5 px-2">{{ slide.title }}</h3>{% endif %}
+            {% if slide.description %}<div class="px-2">{{ slide.description | safe }}</div>{% endif %}
+        </div>
+    {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="d-flex flex-md-row flex-column">
+        {% include 'blog/article-detail-content.html' %}
+    </div>
+
+
+</div>  
+</div>
+{% endblock article_content %}
+
+
+<ol class="carousel-indicators">
+            {% if article.gallery.images.count > 1 %}
+            {% for slide in article.gallery.images.all %}
+                <li data-target="#article-carousel" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.counter0 == 0 %}active{% endif %}"></li>
+            {% endfor %}
+            {% endif %}
+        </ol>

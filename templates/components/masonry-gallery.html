@@ -1,0 +1,12 @@
+
+<div id="masonry-gallery">
+{% for image in images %}
+
+	<div class="card w-50 border-0 m-0 p-1" id="item">
+        <a href="{{ image.content_object.detail_url }}">
+            {{ image.render_thumb }}
+        </a>
+    </div>
+
+{% endfor %}
+</div>

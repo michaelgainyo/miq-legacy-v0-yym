@@ -1,0 +1,8 @@
+
+<div class="d-flex align-items-center justify-content-around">
+{% for category in categories %}
+
+	<a class="p-2 title-0" href="{{ category.detail_url }}">{{ category.name }}</a>
+
+{% endfor %}
+</div>

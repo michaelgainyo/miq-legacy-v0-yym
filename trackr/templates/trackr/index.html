@@ -1,0 +1,292 @@
+{% extends 'staff/base.html' %}
+{% load i18n %}
+{% load trackr_tags %}
+
+{% block css_code %}{{ block.super }}
+
+.lead{font-size: 1.1rem;}
+
+{% endblock css_code %}
+
+{% block title %}{% trans "Staff Analytics" %}{% endblock %}
+
+{% block ptitle %}{% trans "Analytics" %}{% endblock ptitle %}
+
+
+{% block content %}
+<div class="mb-4">
+
+
+<div class="mx-3">
+    <canvas class="w-100" id="myChart" width="900" height="400"></canvas>
+</div>
+
+<div class="d-flex flex-wrap">
+    <div class="col-md-4 col-6">
+        <div class="lead my-1">Most visited pages</div>
+        <div class="list-group">
+            <div class="d-flex justify-content-between list-group-item text-muted">Page <span>Sessions</span></div>
+            {% for hit in views.sessions_by_landing_pages %}
+                <div class="d-flex justify-content-between list-group-item">
+                    <div class="text-break">{{ hit.path }}</div>
+                    <span class="ml-2">{{ hit.sessions_count }}</span></div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-md-4 col-6">
+        <div class="lead my-1">Top referring sites</div>
+        <div class="list-group">
+            <div class="d-flex justify-content-between list-group-item text-muted">Page <span>Sessions</span></div>
+            {% for hit in views.sessions_by_referrers %}
+                <div class="d-flex justify-content-between list-group-item">
+                    <div class="text-break">{{ hit.referrer }}</div>
+                    <span class="ml-2">{{ hit.sessions_count }}</span></div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+</div>
+{% endblock content %}
+
+<script>
+{% block documentready %}
+
+var labels = {{ data.labels | safe }}
+
+var barChartData = {
+    labels: labels,
+    datasets: [{
+        label: 'Traffic',
+        backgroundColor: 'rgb(54, 162, 235)',
+        borderColor: 'rgb(54, 162, 235)',
+        borderWidth: 1,
+        data: {{ data.data | safe }}
+    }, {
+        label: 'Bots',
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        borderWidth: 1,
+        data: {{ cross_data.data | safe }}
+    }]
+
+};
+
+window.onload = function() {
+    var ctx = document.querySelector('#myChart').getContext('2d');
+    window.myBar = new Chart(ctx, {
+        type: 'bar',
+        data: barChartData,
+        options: {
+            responsive: true,
+            legend: {
+                position: 'bottom',
+            },
+            title: {
+                display: true,
+                text: '{{ data.title | capfirst }}'
+            }
+        }
+    });
+};
+
+{% endblock documentready %}
+</script>
+
+
+
+<ul>
+    <li>Filter bots: {{site.trackrsetting.filter_bot}}</li>
+    <li></li>
+    <li>objects:  {{ hits.count }}</li>
+    <li></li>
+    <li>views total: {{ hits.views.count }}</li>
+    <li>views today: {{ hits.views.today.count }}</li>
+    <li>views yesterday: {{ hits.views.yesterday.count }}</li>
+
+    <li></li>
+    <li>last_7_days: Total:{{ hits.last_7_days.count }} Views{{ hits.views.last_7_days.count }} Bots:{{ hits.bots.last_7_days.count }}</li>
+    <li>last_14_days: Total:{{ hits.last_14_days.count }} Views{{ hits.views.last_14_days.count }} Bots:{{ hits.bots.last_14_days.count }}</li>
+    <li>last_30_days: Total:{{ hits.last_30_days.count }} Views{{ hits.views.last_30_days.count }} Bots:{{ hits.bots.last_30_days.count }}</li>
+    <li>views last_90_days: {{ hits.views.last_90_days.count }}</li>
+    <li>views last_180_days: {{ hits.views.last_180_days.count }}</li>
+    <li>views last_year: {{ hits.views.last_year.count }}</li>
+    
+    <li></li>
+    <li>bots: {{ hits.bots.count }}</li>
+    <li></li>
+</ul>
+
+<ul class="nav nav-tabs" id="nav-tab" role="tablist">
+
+        <li class="nav-item">
+            <a class="nav-link {% if tab == 'index' %}active{% endif %}" href="{{ site.trackrsetting.staff_index_url }}">{% trans "Overview" %}</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {% if tab == 'setting' %}active{% endif %}" href="{{ site.trackrsetting.staff_edit_url }}">
+                {% trans "Settings" %}
+            </a>
+        </li>
+
+    </ul>
+
+    <div class="" id="tab-content">
+                
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+            {% block tabcontent %}
+            <div class="card border-top-0 rounded-0">
+                <div class="d-flex">
+                    <div class="flex-fill">
+                        <div class="card-header font-weight-bold border-0">{% trans "Today" %}</div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <span class="">{% trans "New Users" %}</span>
+                                <div>{{ new_users.count }}</div>
+                            </div>
+                        </div>
+
+                        <div class="card-header font-weight-bold border-0">{% trans "Summary" %}</div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <span class="">{% trans "Total users" %}</span>
+                                <div>{{ users.count }}</div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="">{% trans "Total hits" %}</span>
+                                <div>{{ views.count }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex-fill">
+                        <div class="card-header font-weight-bold border-0">{% trans "Traffic sources" %}</div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <span class="">Google</span>
+                                <div>{{ views.from_google.count }}</div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="">Google Ads</span>
+                                <div>{{ views.from_googleads.count }}</div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="">Facebook</span>
+                                <div>{{ views.from_facebook.count }}</div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="">Instagram</span>
+                                <div>{{ views.from_instagram.count }}</div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="">{% trans "Bots" %}</span>
+                                <div>{{ views.from_bots.count }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if paths %}
+                    <div class="flex-fill">
+                        <div class="card-header font-weight-bold border-0">{% trans "Paths" %}</div>
+                        <div class="card-body">
+                            {% for path in paths %}
+                            <div class="d-flex justify-content-between">
+                                <span class="">{{ path.name }}</span>
+                                <div>{{ path.get_today_manager.count }}</div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                </div>
+            </div>
+
+            {% if articles %}
+            <div class="mb-5 table-responsive">
+                <div class="card-header font-weight-bold border-0 mt-3">{% trans "Last article views" %}</div>
+                <table class="table-striped table-sm">
+                    <thead>
+                        <th scope="col">{% trans "Updated/created" %}</th>
+                        <th scope="col">{% trans "Visitor" %}</th>
+                        <th scope="col">{% trans "Referrer" %}</th>
+                        <th scope="col">{% trans "Path" %}</th>
+                        <th scope="col">{% trans "Count" %}</th>
+                        <th scope="col">{% trans "User agent" %}</th>
+                    </thead>    
+
+                    <tbody>
+                        {% for hit in articles.all %}
+                        <tr>
+                            <td class="small">{{ hit.updated }} <br> {{ hit.created }}</td>
+                            <td>{{ hit.visitor }} <br> {{ hit.ip }}</td>
+                            <td>{{ hit.referrer }}</td>
+                            <td><a href="{{ hit.staff_detail_url }}">{{ hit.path}}</a></td>
+                            <td>{{ hit.count }}</td>
+                            <td>{{ hit.user_agent }}</td>
+                        </tr>
+                        {% empty %}
+                            <tr>
+                                <td class="title">{% trans "Not enough data" %}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            <div class="table-responsive">
+                <div class="card-header font-weight-bold border-0 mt-3">{% trans "Last 10 page views" %}</div>
+                <table class="table-striped table-sm">
+                    <thead>
+                        <th scope="col">{% trans "Updated/created" %}</th>
+                        <th scope="col">{% trans "Visitor" %}</th>
+                        <th scope="col">{% trans "Referrer" %}</th>
+                        <th scope="col">{% trans "Path" %}</th>
+                        <th scope="col">{% trans "Count" %}</th>
+                        <th scope="col">{% trans "User agent" %}</th>
+                    </thead>    
+
+                    <tbody>
+                        {% for hit in views.all|slice:":10" %}
+                        <tr>
+                            <td class="small">{{ hit.updated }} <br> {{ hit.created }}</td>
+                            <td>{{ hit.visitor }} <br> {{ hit.ip }}</td>
+                            <td>{{ hit.referrer }}</td>
+                            <td><a href="{{ hit.staff_detail_url }}">{{ hit.path}}</a></td>
+                            <td>{{ hit.count }}</td>
+                            <td>{{ hit.user_agent }}</td>
+                        </tr>
+                        {% empty %}
+                            <tr>
+                                <td>{% trans "Not enough data" %}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endblock tabcontent %}
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

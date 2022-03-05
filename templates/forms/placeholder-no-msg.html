@@ -1,0 +1,17 @@
+
+{% for field in form.visible_fields %}
+<div class="form-group {{ field.html_name }} {% if field.errors %}text-danger{% endif %}">
+	{{ field }}
+	
+	{% if field.errors %}<div class="form-control-feedback">{{ field.errors.as_text }}</div>{% endif %}
+	
+	<small id="{{ field.html_name }}" class="form-text text-muted">{{ field.help_text }}</small>
+</div>
+{% endfor %}
+
+<div class="invisible">
+{% for field in form.hidden_fields %}
+    {{ field }}
+{% endfor %}
+</div>
+

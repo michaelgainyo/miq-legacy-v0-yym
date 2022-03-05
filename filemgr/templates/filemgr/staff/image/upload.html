@@ -1,0 +1,120 @@
+{% extends "staff/list.html" %}
+
+{% block btn %}
+<button type="button" class="btn btn-primary js-upload-photos" id="formUpload">
+  <span class="glyphicon glyphicon-cloud-upload"></span> Upload photos
+</button>
+
+<input id="fileupload" type="file" name="file" multiple
+  style="display: none;"
+  data-url="{% url 'filemgr:img_upload' %}"
+  data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+{% endblock btn %}
+
+{% block content %}
+
+<div id="gallery">
+<div class="row">
+{% for img in imgs %}
+    <div class="col-4 p-3">
+        {% include 'filemgr/staff/image/card.html' %}
+    </div>
+{% endfor %}
+</div>
+</div>
+
+<!-- MODAL TO CROP THE IMAGE -->
+<div class="modal fade" id="modalCrop">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Crop the photo</h4>
+      </div>
+      <div class="modal-body">
+        <img src="" id="image" style="max-width: 100%;">
+      </div>
+      <div class="modal-footer">
+        <div class="btn-group pull-left" role="group">
+          <button type="button" class="btn btn-default js-zoom-in">
+            <span class="glyphicon glyphicon-zoom-in"></span>
+          </button>
+          <button type="button" class="btn btn-default js-zoom-out">
+            <span class="glyphicon glyphicon-zoom-out"></span>
+          </button>
+        </div>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+        <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+
+<script>
+{% block documentready %}
+
+/* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
+
+$("#id_file").click(function () {
+  console.log('Click')
+  if (this.files && this.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      $("#image").attr("src", e.target.result);
+      $("#modalCrop").modal("show");
+    }
+    reader.readAsDataURL(this.files[0]);
+  }
+});
+
+
+$(function () {
+  /* 1. OPEN THE FILE EXPLORER WINDOW */
+  $(".js-upload-photos").click(function () {
+    $("#fileupload").click();
+  });
+
+  /* 2. INITIALIZE THE FILE UPLOAD COMPONENT */
+  $("#fileupload").fileupload({
+    dataType: 'json',
+    done: function (e, data) {  /* 3. PROCESS THE RESPONSE FROM THE SERVER */
+      if (data.result.is_valid) {
+        // $("#gallery tbody").prepend(
+        $("#gallery .row").prepend(
+          // "<tr><td><a href='" + data.result.url + "'>" + data.result.name + "</a></td></tr>"
+          '<div class="col-4 p-3"><div class="square-img" style="min-width: 4rem;"><img src="' + data.result.url + '" style="min-height: 20px;"></div></div>'
+        )
+      }
+    }
+  });
+
+});
+{% endblock documentready %}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,45 @@
+{% load site_tags %}
+{% load i18n %}
+
+{% include 'sitemgr/comment-form.html' with model=model app=app obj=obj %}
+                        
+<div id="new-comment-{{ obj.pk }}"></div>
+{% for comment in obj.comments.all %}
+<div class="media mt-3">
+    {% include "sitemgr/account/profile-photo.html" with img_url=comment.user.profile.image.thumbnail.url height=30 width=30 %}
+
+    <div class="media-body ml-2">
+        <div class="">
+            <a href="{{ comment.user.profile.detail_url }}" class="mr-1 font-weight-bold">{{ comment.user.username | lower }}</a>
+            <span>{{ comment.render_body | safe }}</span>
+        </div>
+
+        <small class="d-flex align-items-top py-1">
+            <div id="toggle-{{ comment.pk }}" class="">
+                <a class="comment-reply-btn text-muted"
+                    data-toggle="collapse" data-parent="#toggle-{{ comment.pk }}"
+                    href="#reply-{{ comment.pk }}" aria-expanded="false">
+                    {% trans "Reply" %}
+                </a>
+            </div>
+
+            {% if request.user == comment.user or request.user == obj.user or request.user.is_superuser %}
+            <form action="{{ comment.deactivate_url }}" method="post">{% csrf_token %}
+                <input type="hidden" name="active" value="false">
+                <button type="submit" class="border-0 text-muted py-0 js-delete" style="background-color: transparent;">{% trans "Delete" %}</button>
+            </form>
+            {% endif %}
+        </small>
+
+        <div id="reply-{{ comment.pk }}" class="collapse mt-2" role="tabpanel">
+            {% include 'sitemgr/comment-form.html' with model=model app=app obj=obj comment=comment %}
+        </div>
+            
+    </div>
+</div>
+{% endfor %}
+
+
+
+
+

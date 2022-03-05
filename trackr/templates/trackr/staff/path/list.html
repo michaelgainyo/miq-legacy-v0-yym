@@ -1,0 +1,102 @@
+{% extends 'staff/list.html' %}
+{% load site_tags %}
+
+{% block ptitle %}paths{% endblock ptitle %}
+
+{% block btn %}
+	<a href="{% url 'trackr:path_create' %}" class="btn btn-sm btn-outline-primary">add {{ model_name }}</a>
+{% endblock btn %}
+
+
+{% block thead %}
+<th scope="col">name</th>
+<th scope="col">path</th>
+<th scope="col">today views</th>
+<th scope="col">total views</th>
+<th scope="col"></th>
+{% endblock thead %}
+
+
+{% block content %}
+
+<div class="">
+
+    {% include "forms/msgs.html" %}
+    add funnel
+
+    <form action="." method="POST">{% csrf_token %}
+        <input type="text" name="filter">
+
+        <input type="submit" value="Add funnel">
+    </form>
+</div>    
+
+{% if qs %}
+
+{% for f in filters %}
+    <form action="." method="POST">{% csrf_token %}
+        <input type="hidden" value="{{ f }}" name="delete">
+        <input type="submit" value="Delete filter {{ f }}">
+    </form>
+{% endfor %}
+
+
+
+
+<div class="d-flex flex-wrap justify-content-around my-3">
+    <div class="col-md-4 px-0">
+        {% include "trackr/staff/path/funnel-detail.html" with node=filters.0 hits=qs.hits refs=qs.refs.all %}
+    </div>
+
+    <div class="col-md-4">
+        2 - {{ qs1.count }} - {% widthratio qs1.count qs.count 100 %}
+        <div></div>
+
+        <div class="list-group-item">
+            {{ qs1.hits.count }} unique views
+            <div>{{ qs1.refs.count }} referrals</div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        3 - {{ qs2.count }} - {% widthratio qs2.count qs1.count 100 %}
+        <div class="">
+            {% for h in qs2.all %}
+                {{ h.session }} {{ h }}
+                
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+</div>
+{% endif %}
+
+
+{% endblock content %}
+
+
+
+
+
+{% block card %}
+
+{% with object as path %}
+
+<tr>
+    <td class=""><a href="{{ path.staff_detail_url }}">{{ path }}</a></td>
+    <td>{{ path.path }}</td>
+    <td>{{ path.get_today_manager.count }}</td>
+    <td>{{ path.get_manager.count }}</td>
+
+    <td>
+        {% render_a path.staff_delete_url icn='trash-2' cta='' cls='btn-outline-danger' %}
+        {% render_a path.staff_edit_url icn='edit' cta='' cls='btn btn-outline-primary' %}
+        {% render_a path.staff_detail_url icn='eye' cta='View Details' cls='btn btn-info' %}
+    </td>
+</tr>
+
+{% endwith %}
+
+{% endblock card %}

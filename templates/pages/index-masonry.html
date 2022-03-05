@@ -1,0 +1,84 @@
+{% extends 'front.html' %}
+{% load static %}
+
+
+{% block title %}Official Website{% endblock %}
+
+
+{% block breadcrumb %}{% endblock breadcrumb %}
+{% block header %}{% endblock header %}
+
+<style>
+/*{% block css_code %}{% endblock css_code %}*/
+</style>
+
+
+{% block content %}
+
+<div class="container-fluid">
+
+
+{% if masonry %}
+
+	<div class="" id="gallery">
+
+	{% for image in masonry %}
+
+		<div class="card w-50 border-0 m-0 p-1" id="item">
+			<a href="{{ image.content_object.detail_url }}">{{ image.render_thumb }}</a>
+		</div>
+
+	{% endfor %}
+
+	</div>
+
+{% else %}
+	<div class="text-center">
+		<h1>Masonry</h1>
+	</div>
+
+{% endif %}
+
+</div>
+
+
+{% endblock content %}
+
+
+{% block documentready %}
+
+var $container = $('#gallery');
+  $container.masonry({
+      columnWidth: '#item',
+      itemSelector: '#item'
+    }); 
+
+$container.imagesLoaded(function() {
+  $container.masonry('layout');
+    
+});
+
+{% endblock documentready %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

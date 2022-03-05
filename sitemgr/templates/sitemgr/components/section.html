@@ -1,0 +1,19 @@
+{% load site_tags %}
+
+<div class="my-1">
+
+{% if section.cta_url %}<a href="{{ section.cta_url }}">{% endif %}
+
+{% if section.image_url %}
+	<img src="{{ section.image_url }}" alt="{{ section.img_alt_text }}" class="img-fluid">
+{% endif %}
+
+{% if section.cta_url %}</a>{% endif %}
+
+{% if section.title %}<h4 class="my-3">{{ section.title }}</h4>{% endif %}
+
+{% if section.text %}<p class="my-2">{{ section.text | safe | linebreaks }}</p>{% endif %}
+
+{% if section.cta %}{% render_a section.cta_url '' a_title=section.title cta=section.cta cls='btn-outline-primary my-2' %}{% endif %}
+
+</div> 

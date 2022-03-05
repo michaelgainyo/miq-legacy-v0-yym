@@ -1,0 +1,33 @@
+<div class="d-inline-flex">
+    {% if site.aboutsetting.instagram_url %}
+        <a href="{{ site.aboutsetting.instagram_url }}" class="btn-link text-lowercase text-dark mr-3" target="_blank" rel="noreferrer" aria-label="Instagram page">
+        	<span data-feather='instagram'></span>
+        </a>
+    {% endif %}
+
+    {% if site.aboutsetting.facebook_url %}
+        <a href="{{ site.aboutsetting.facebook_url }}" class="btn-link text-lowercase text-dark mr-3" target="_blank" rel="noreferrer" aria-label="Facebook page">
+        	<span data-feather='facebook'></span>
+        </a>
+    {% endif %}
+
+    {% if site.aboutsetting.pinterest_url %}
+        <a href="{{ site.aboutsetting.pinterest_url }}" class="btn-link text-lowercase text-dark mr-3" target="_blank" rel="noreferrer" aria-label="Pinterest page">
+        	<svg height="20" viewBox="-3 -3 82 82" width="20" style="display: block;"><circle cx="38" cy="38" fill="white" r="40"></circle><path d="M27.5 71c3.3 1 6.7 1.6 10.3 1.6C57 72.6 72.6 57 72.6 37.8 72.6 18.6 57 3 37.8 3 18.6 3 3 18.6 3 37.8c0 14.8 9.3 27.5 22.4 32.5-.3-2.7-.6-7.2 0-10.3l4-17.2s-1-2-1-5.2c0-4.8 3-8.4 6.4-8.4 3 0 4.4 2.2 4.4 5 0 3-2 7.3-3 11.4C35.6 49 38 52 41.5 52c6.2 0 11-6.6 11-16 0-8.3-6-14-14.6-14-9.8 0-15.6 7.3-15.6 15 0 3 1 6 2.6 8 .3.2.3.5.2 1l-1 3.8c0 .6-.4.8-1 .4-4.4-2-7-8.3-7-13.4 0-11 7.8-21 22.8-21 12 0 21.3 8.6 21.3 20 0 12-7.4 21.6-18 21.6-3.4 0-6.7-1.8-7.8-4L32 61.7c-.8 3-3 7-4.5 9.4z" fill="#e60023" fill-rule="evenodd"></path></svg>
+        </a>
+    {% endif %}
+
+    {% if site.aboutsetting.youtube_url %}
+        <a href="{{ site.aboutsetting.youtube_url }}" class="btn-link text-lowercase text-dark mr-3" target="_blank" rel="noreferrer" aria-label="Youtube page">
+        	<svg viewBox="0 0 100 60" height="20" width="30">
+        			<g>
+	          			<path fill="#FF0000" d="M63,14.87c-0.72-2.7-2.85-4.83-5.56-5.56C52.54,8,32.88,8,32.88,8S13.23,8,8.32,9.31
+	            		c-2.7,0.72-4.83,2.85-5.56,5.56C1.45,19.77,1.45,30,1.45,30s0,10.23,1.31,15.13c0.72,2.7,2.85,4.83,5.56,5.56
+	            		C13.23,52,32.88,52,32.88,52s19.66,0,24.56-1.31c2.7-0.72,4.83-2.85,5.56-5.56C64.31,40.23,64.31,30,64.31,30
+	            		S64.31,19.77,63,14.87z"></path>
+	          			<polygon fill="#FFFFFF" points="26.6,39.43 42.93,30 26.6,20.57"></polygon>
+	        		</g>
+				</svg>
+        </a>
+    {% endif %}
+</div>

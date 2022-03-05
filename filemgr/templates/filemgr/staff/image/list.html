@@ -1,0 +1,79 @@
+{% extends 'staff/list.html' %}
+
+{% block title %}Images{% endblock title %}
+
+{% block ptitle %}Images{% endblock ptitle %}
+
+{% block css_code %}
+	{{ block.super }}
+
+	.img-fluid{max-width: 100px;}
+{% endblock css_code %}
+
+
+{% block btn %}
+
+    <button type="button" class="btn btn-sm btn-outline-primary js-upload-photos">upload images</button>
+
+    <input id="fileupload" type="file" name="file" multiple
+        style="display: none;"
+        data-url="{% url 'filemgr:img_upload' %}"
+        data-form-data='{
+        "csrfmiddlewaretoken": "{{ csrf_token }}",
+        "app": "{{ app_name }}",
+        "model": "{{ model_name }}",
+        "pk": "{{ object.pk }}",
+        "next": "{{ request.path }}"
+        }'>
+{% endblock btn %}
+
+
+{% block thead %}
+<th scope="col" class="border-top-0"></th>
+<th scope="col" class="border-top-0">link</th>
+<th scope="col" class="border-top-0">modified</th>
+<th scope="col" class="border-top-0">user</th>
+<th scope="col" class="border-top-0"></th>
+{% endblock thead %}
+
+
+{% block card %}
+
+<tr>
+    <td>{{ object.render_thumb }}</td>
+    <td class="text-lowercase">{{ object.url | lower }}</td>
+    <td>{{ object.updated | timesince }}</td>
+    <td>{{ object.user.username }}</td>
+
+	<td>
+		<div class="text-center">
+			
+			{% if perms.filemgr.change_image %}
+				<a href="{{ object.staff_edit_url }}" class="btn-block mb-1 btn btn-sm btn-outline-primary">edit</a>
+			{% endif %}
+
+			{% if perms.filemgr.delete_image %}
+				<a href="{{ object.staff_delete_url }}" class="btn-block mb-1 btn btn-sm btn-outline-secondary">delete</a>
+			{% endif %}
+
+		</div>
+	</td>
+</tr>
+
+
+{% endblock card %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

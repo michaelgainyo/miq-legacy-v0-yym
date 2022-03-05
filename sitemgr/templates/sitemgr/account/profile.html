@@ -1,0 +1,131 @@
+{% extends 'front.html' %}
+{% load i18n %}
+
+{% block title %}{{ user.username }}{% endblock title %}
+
+
+{% block content %}
+
+<div class="d-flex flex-column flex-grow-1">
+
+    <div class="media p-3">
+        <div class="media-body ml-2 ml-md-4">
+            <strong class="lead">
+                <a href="{{ user.profile.detail_url }}">{{ user.username | lower }}</a>
+            </strong>
+
+            {% if user.profile.type %}
+                <div class="text-muted title-0 text-lowercase">{{ user.profile.get_type_display }}</div>
+            {% endif %}
+
+            <div>{{ user.profile.biography | linebreaks | truncatewords:20 }}</div>
+
+            {% if request.user.is_authenticated %}
+            <ul class="list-unstyled d-flex">
+                {% if user.profile.instagram_handle %}
+                <li class="mr-2">
+                    <a class="" href="{{ user.profile.instagram_url }}" target="_blank"><span data-feather="instagram"></span></a>
+                </li>
+                {% endif %}
+
+                {% if user.profile.website %}
+                <li>
+                    <a class="" href="{{ user.profile.website }}" target="_blank"><span data-feather="globe"></span></a>
+                </li>
+                {% endif %}
+            </ul>
+            {% endif %}
+
+        </div>
+
+        <div class="">
+        {% include "sitemgr/account/profile-photo.html" with img_url=user.profile.image.thumbnail.url height=72 width=72 %}
+        </div>
+    </div>
+
+    <div class="container-fluid mt-3 p-0">
+        {% if not object_list %}
+
+            <div class="text-center pt-5">
+                <span class="lead">{% trans "No post found" %}</span>
+            </div>
+
+        {% else %}
+
+            <div class="infinite-container row no-gutters">
+                {% for post in object_list %}
+                <div class="infinite-item col-4">
+                    <a href="{{ post.detail_url }}">
+                    <img class="card-img" src="{{ post.images.first.m_file.url }}"
+                        alt="{{ post.description }}" data-bigimage="{{ post.images.first.m_file.url }}" style="padding: 2px;">
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="loading" style="display: none;">Loading...</div>
+
+            {% if page_obj.has_next %}
+                <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">{% trans "More" %}</a>
+            {% endif %}
+
+        {% endif %}
+
+        {# {% include "components/pagination.html" with page=page_obj %} #}
+
+    </div>
+
+</div>
+{% endblock content %}
+
+{% block main %}
+
+    <ul class="nav nav-fill">
+
+        <li class="nav-item">
+            <a class="nav-link title {% if tab == 'posts' %}active{% endif %}" href="{{ user.profile.detail_url }}">{% trans "Posts" %}</a>
+        </li>
+
+        {% if user.articles %}
+        <li class="nav-item">
+            <a class="nav-link title {% if tab == 'articles' %}active{% endif %}" href="{{ user.profile.articles_url }}">{% trans "Publications" %}</a>
+        </li>
+        {% endif %}
+
+        <li class="nav-item">
+            <a class="nav-link title {% if tab == 'about' %}active{% endif %}" href="">{% trans "About" %}</a>
+        </li>
+
+    </ul>
+
+    <div class="" id="tab-content">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        {% block tabcontent %}{% endblock tabcontent %}
+        </div>
+    </div>
+
+{% endblock main %}
+
+
+<div class="card w-50 border-0 m-0 p-1" id="item">
+                                        <a href="{{ post.detail_url }}">{{ post.images.first.render_thumb }}</a>
+                                    </div>
+
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

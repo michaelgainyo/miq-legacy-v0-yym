@@ -1,0 +1,96 @@
+{% extends 'blog/staff/article/edit.html' %}
+{% load img_tags %}
+{% load site_tags %}
+
+{% block btn %}
+<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#imagemodal">
+    <div class="d-flex align-items-center">
+        Add Slide
+        <span data-feather="upload-cloud" class="ml-2"></span>
+    </div>
+</button>
+{% endblock btn %}
+
+{% block tab %}
+{% include 'filemgr/staff/image/edit-obj-images.html' with obj=article imgs=article.gallery.images %}
+{% endblock tab %}
+
+
+{% block sidetab %}
+{% if selected %}
+    {% include 'filemgr/staff/image/edit-obj-images-form.html' with img_form=selected.edit_form %}
+{% endif %}
+{% endblock sidetab %}
+
+
+{% block modal %}
+    <form action="{% url 'filemgr:staff_gimg_create' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h5 class="modal-title">Add a new Slide</h5>
+        </div>
+
+        <div class="modal-body">
+            {{ imageform }}
+            <input type="hidden" name="next" value="{{ request.path }}" />
+            <input type="hidden" name="gallery_pk" value="{{ article.gallery.pk }}" />
+        </div>
+
+        <div class="modal-footer text-center">
+            <input type="submit" class="btn btn-primary btn-sm" value="Save">
+        </div>
+
+    </div>
+    </div>
+    </div>
+    </form>
+{% endblock modal %}
+
+
+<script>
+{% block documentready %}
+
+
+
+$('#is-slider').click(function(){
+
+    $.ajax({
+        type: 'POST',
+        url: '{{ article.gallery.staff_edit_url }}',
+        data: {
+            'is_slider': $(this).val(),
+            'name': '{{ article.gallery.name }}',
+            'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+        },
+        success: function(data){
+            if (data.checked){
+                $('#is-slider').val('True').prop("checked", true);
+            }else{
+                $('#is-slider').val('').prop("checked", false);
+            }
+
+        }
+    });
+});
+
+$('#img-imgs').on('click', '.js-img-update', staffImgUpdateForm);
+{% endblock documentready %}
+</script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+

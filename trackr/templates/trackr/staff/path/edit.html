@@ -1,0 +1,32 @@
+{% extends 'staff/edit.html' %}
+
+
+{% block ptitle %}
+	{% if object %}edit{% else %}add{% endif %} path <small class="text-muted">{{ object.name }}</small>
+{% endblock ptitle %}
+
+
+{% block btn %}
+	<a href="{% url 'trackr:path_list' %}" class="btn btn-sm btn-outline-primary">view paths</a>
+{% endblock btn %}
+
+
+{% block content %}
+<div class="container">
+	<div class="row">
+	<div class="col-md-4 offset-md-4">
+
+		<form action="." method="post" enctype="multipart/form-data" class="">{% csrf_token %}
+			{% include 'forms/label.html' %}
+			
+			<p class="card-block">
+				<input type="submit" value="save" class="btn btn-block btn-primary">
+			</p>
+		</form>
+
+	</div>
+	</div>
+</div>
+
+{% endblock content %}
+

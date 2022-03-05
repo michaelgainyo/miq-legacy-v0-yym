@@ -1,0 +1,13 @@
+"""
+__author__ = "marqetintl"
+__co_author__ = "Michaël Gainyo"
+__email__ = "michaelgainyo@gmail.com"
+__version__ = "0.0.1"
+__copyright__ = "Copyright (C) 2016 Michaël Gainyo and contributors"
+"""
+
+
+from logging import config
+from .logger import LOGGING
+
+config.dictConfig(LOGGING)

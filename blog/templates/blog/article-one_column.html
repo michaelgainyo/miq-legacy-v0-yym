@@ -1,0 +1,20 @@
+{% extends 'blog/article-base.html' %}
+{% load img_tags %}
+
+{% block article_content %}
+
+<div class="d-flex flex-column container px-0">
+
+	<div class="d-flex flex-column">
+    {% for image in article.images.all %}
+        <div class="px-md-2">{% include 'blog/article-detail-image.html' %}</div>
+    {% endfor %}
+    </div>
+
+    <div class="d-flex flex-md-row flex-column">
+        {% include 'blog/article-detail-content.html' %}
+    </div>
+</div>
+
+{% endblock article_content %}
+

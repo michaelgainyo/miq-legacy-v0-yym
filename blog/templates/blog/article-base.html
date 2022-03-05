@@ -1,0 +1,123 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% load img_tags %}
+
+{% block meta %}
+{{ block.super }}
+
+<meta name="author" content="{{ site.name | capfirst }}">
+<meta name="og:video" content="{{ article.video_url }}">
+<meta name="og:image:alt" content="{{ article.title | capfirst }} - {{ site.name }}">
+
+{% if article.image %}
+<meta name="og:image:width" content="{{ article.image.width }}">
+<meta name="og:image:height" content="{{ article.image.height }}">    
+{% endif %}
+
+<meta name="content-type" content="article"/>
+<meta name="robots" content="index, follow"/>
+
+{% endblock meta %}
+
+{% block jsonld %}
+<script type="application/ld+json">{{ object.json_ld|safe }}</script>
+{% endblock jsonld %}
+
+
+<style>
+{% block css_code %}
+    {% if article.gallery_layout == 'slideshow' and not article.video_url %}
+        #front-wrapper{padding-top: 0;}
+        /*#navbar, #navbar a, #navbar button{color: white;}*/
+        .carousel-indicators{bottom: -50px;}
+        .carousel-indicators li{background-color: black; opacity: 1;}
+        .carousel-indicators .active{background-color: #007bff;}
+    {% endif %}
+{% endblock css_code %}
+</style>
+
+
+{% block title %}{{ object.title }} - {{ object.category.name }}{% endblock title %}
+
+
+{% block content_inner %}
+<div class="d-flex flex-column">
+
+<div class="text-center mb-3">
+    <h1 class="mt-5 mb-3">{{ article.title | upper }}</h1>
+
+    <div class="d-flex align-items-center {% if article.artists %}justify-content-around{% endif %}">
+        
+        {% if article.artists.count > 0 %}
+        <div class="mr-2">
+        {% for usr in article.artists.all %}
+        <div class="media d-flex align-items-center">
+            {% include "sitemgr/account/profile-photo.html" with img_url=usr.profile.image.thumbnail.url height=30 width=30 %}
+
+            <div class="media-body ml-2 ml-md-4">
+                <a href="{{ usr.profile.detail_url }}" class="text-primary">{{ usr.username | lower }}</a>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+        {% endif %}
+
+        <span class="text-muted d-block small">{{ article.created | timesince }} ago</span>
+
+    </div>
+</div>
+
+
+{# video #}
+{% if article.video_url %}
+    <div class="embed-responsive embed-responsive-16by9 mb-2">
+        <iframe class="embed-responsive-item" src="{{ article.video_url }}" allowfullscreen></iframe>
+    </div>
+{% endif %}
+
+{% block article_content %}[article]{% endblock article_content %}
+
+
+<div class="container">
+<div class="row mt-3">
+
+    <div class="col-md-6 offset-md-2">
+        {% include 'sitemgr/comment.html' with obj=article model='article' app='blog' %}
+    </div>
+
+    {% if more %}
+    <div class="col-12">
+        <h5 class="mb-3 mt-4 pb-2">READ NEXT ...</h5>
+
+        <div class="d-flex w-100" style="overflow-x: auto;">
+            {% for obj in more %}
+            <div class="card col-md-3 col-6 p-0 mr-2 border-0">
+                <div class="w-100" style="overflow:hidden; max-height: 150px;">
+                    <a href="{{ obj.detail_url }}">
+                        {% render_img obj.image cls='img-fluid' %}
+                    </a>
+                </div>
+
+                <div class="card-body">
+                    <a class="d-block h6" href="{{ obj.detail_url }}">{{ obj.title | upper }}</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+</div>
+
+</div>
+{% endblock content_inner %}
+
+
+{% block documentready %}
+
+$(".js-comment").on("click", commentForm);
+$(".js-delete").on("click", deleteForm);
+    
+{% endblock documentready %}
+

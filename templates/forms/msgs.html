@@ -1,0 +1,25 @@
+{% if messages %}
+<ul class="messages list-unstyled">
+    {% for message in messages %}
+        <li 
+        	{% if message.tags == 'error' %}
+        		class="alert alert-danger"
+        	{% else %}
+        		class="alert alert-{{ message.tags }}"
+        	{% endif %} role="alert">
+        	{{ message | striptags }}
+            {% if form.errors %}
+                <ul class="list-unstyled">
+                {% for field in form %}
+                    {% if field.errors %}
+                        <li class="">{{ field.label }}: {{ field.errors | striptags }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+
+
+</ul>
+{% endif %}

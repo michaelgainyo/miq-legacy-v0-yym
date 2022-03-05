@@ -1,0 +1,45 @@
+{% extends 'front.html' %}
+{% load static %}
+
+<style>
+{% block css_code %}
+{{ block.super }}
+/*.body-wrapper{padding-top: 0;}*/
+/*.fixed-top.navbar .nav-link, .fixed-top.navbar button{color: white;}*/
+
+.sidebar-wrapper{
+    padding-top: 50px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100; /* Behind the navbar */
+}
+
+{% endblock css_code %}
+</style>
+
+
+{% block content_inner %}
+
+<div>{% include 'sitemgr/pages/index-header.html' %}</div>
+
+{# INDEX SECTIONS #}
+<div class="">
+{% for section in object.sections.all %}
+    {% include 'sitemgr/components/section-list-item.html' %}
+{% endfor %}
+</div>
+
+{% endblock content_inner %}
+
+
+
+
+
+
+
+
+
+
+

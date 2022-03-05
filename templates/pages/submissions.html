@@ -1,0 +1,17 @@
+{% extends 'front.html' %}
+
+
+{% block title %}how to submit{% endblock %}
+
+{% block header %}
+	<div class="display-4 pb-3 text-center">Submissions</div>
+{% endblock header %}
+
+
+{% block content %}
+{% if not site.blogsetting.accept_submissions or not site.blogsetting.submission_terms %}
+	<div class="text-center">We are not currently accepting submissions.</div>
+{% else %}
+	{{ site.blogsetting.submission_terms | safe }}
+{% endif %}
+{% endblock content %}

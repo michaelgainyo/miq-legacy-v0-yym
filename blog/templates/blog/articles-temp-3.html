@@ -1,0 +1,14 @@
+{% extends 'blog/articles.html' %}
+{% load static %}
+
+{% block title %}{{ category | lower }}{% endblock title %}
+
+
+{% block header %}
+	<div class="display-4 text-center border-bottom mb-3 pb-3">{{ category }}</div>
+{% endblock header %}
+
+
+ 
+
+

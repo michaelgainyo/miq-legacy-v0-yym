@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load site_tags %}
+{% load trackr_tags %}
+
+{% block body %}
+
+{% if site.settings.is_live is False and request.user.is_staff is False %}
+{% include 'sitemgr/pages/index-close.html' %}
+{% else %}
+<div class="d-flex flex-column" id="front-wrapper">
+    
+    <header>
+        <nav class="d-flex justify-content-between align-items-center fixed-top navbar bg-white" role="navigation" id="navbar">
+            
+            {# <div class="d-flex justify-content-between"> #}
+            <div class="d-flex flex-row">
+                <button type="button" class="btn border-0" data-toggle="modal" data-target="#side-modal" aria-expanded="false" aria-label="Toggle navigation" id="nav-toggle">
+                    <span  data-feather="align-left"></span>
+                </button>
+
+                <div class="d-none d-md-block d-lg-block">
+                    <div class="d-flex flex-row">
+                        {% if site.blogsetting.show_in_navbar %}
+                        <a class="nav-link" href="{{ site.blogsetting.detail_url }}">
+                        {% if site.blogsetting.name %}{{ site.blogsetting.name }}{% else %}{% trans "Blog" %}{% endif %}
+                        </a>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="d-none d-md-block d-lg-block font-weight-bold">{{ site.name|upper }}</div>
+
+            {# icons #}
+            <div class="">{% include 'components/navbar-icons.html' %}</div>
+
+        </nav>
+    </header>
+
+    <main class="d-flex flex-row" role="main">
+
+        {# slideout sidebar #}
+        <div class="modal fade" id="side-modal" tabindex="-1" role="dialog" aria-labelledby="side-modal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-slideout modal-sm" role="document">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-content border-0">
+                    {% include 'components/sidebar.html' %}
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-md-row flex-column w-100">
+        {% block content %}
+
+            {# SIDEBAR #}
+            {% if site.settings.show_sidebar %}
+            <div class="d-none d-md-block d-lg-block pb-4" style="min-width: 150px;">
+                {% block content_sidebar %}
+                    {% include 'components/sidebar.html' %}
+                {% endblock content_sidebar %}
+            </div>
+            {% endif %}
+
+            {# CONTENT INNER #}
+            <div class="flex-grow-1">
+                {% block content_inner %}{% endblock content_inner %}
+            </div>
+
+        {% endblock content %}
+        </div>
+    </main>
+
+    <footer class="mt-5">
+        {% block footer %}{% show_footer %}{% endblock footer %}
+    </footer>
+</div>
+{% endif %}
+
+{% endblock body %} 
+
+{% block meta %}
+<meta property="og:site_name" content="{{ site.name | capfirst }}" />
+
+<meta property="og:type" content="{{ meta.type|default:'website' }}" />
+<meta property='og:title' content="{{ title | capfirst }}" />
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
+<meta name="og:description" content="{{ meta.description|default:meta_description|striptags|truncatewords:50 }}">
+
+<meta name="description" content="{{ meta.description|default:meta_description|striptags|truncatewords:50 }}">
+<meta name="keywords" content="{{ meta_keywords }}">
+
+{% if meta.image %}
+<meta property="og:image" content="{{ meta.image }}">
+{% else %}
+<meta property="og:image" content="{{ request.META.HTTP_HOST }}{{ site.settings.logo_url }}">
+{% endif %}
+
+{% if site.settings.contact_email %}
+<meta property="og:email" content="{{ site.settings.contact_email }}" />
+{% endif %}
+
+{% endblock meta %}
+
+
+{% block head_scripts %}
+
+{% if site.trackrsetting.ga_tracking_id %}{% show_ga_tracking_code %}{% endif %}
+    
+{% if site.trackrsetting.fb_pixel_id %}{% show_fb_tracking_code %}{% endif %}
+
+{% endblock head_scripts %}
+
+
+
+
+
+
+
+
+
+
+
+

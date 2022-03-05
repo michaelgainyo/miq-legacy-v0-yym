@@ -1,0 +1,32 @@
+{% extends 'blog/staff/article/edit.html' %}
+{% load img_tags %}
+
+{% block tab %}
+    {% include 'filemgr/staff/image/edit-obj-images.html' with obj=article imgs=article.images %}
+{% endblock tab %}
+
+
+{% block sidetab %}
+{% if selected %}
+    {% include 'filemgr/staff/image/edit-obj-images-form.html' with img_form=selected.edit_info_form %}
+{% endif %}
+{% endblock sidetab %}
+
+
+{% block documentready %}
+uploadImages();
+$('#img-imgs').on('click', '.js-img-update', staffImgUpdateForm);
+{% endblock documentready %}
+
+
+
+
+
+
+
+
+
+
+
+
+

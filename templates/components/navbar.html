@@ -1,0 +1,85 @@
+{% load i18n %}
+
+
+<nav class="navbar navbar-expand-sm navbar-light">
+
+    <a class="navbar-brand" href="/?referrer=logo">{% include 'components/logo.html' with site=site %}</a>
+  
+    <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="{% trans "Toggle navigation" %}">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+    <div class="collapse navbar-collapse" id="navbar-content">
+        <ul class="navbar-nav mr-auto title text-uppercase">
+
+            {% if site.indexsetting.show_in_navbar %}
+                <li class="nav-item {% if request.path == '/' %}active{% endif %}">
+                    <a class="nav-link" href="/">
+
+                        {% if site.indexsetting.name %}{{ site.indexsetting.name }}{% else %}home{% endif %}
+
+                    </a>
+
+                </li>
+            {% endif %}
+
+            {% if site.blogsetting.show_in_navbar %}
+                <li class="nav-item {% if request.path == '/articles/' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'blog:articles' %}">
+                        
+                        {% if site.blogsetting.name %}{{ site.blogsetting.name }}{% else %}blog{% endif %}
+
+                    </a>
+                </li>
+            {% endif %}
+
+
+            {% if site.settings.show_directory_link_in_navbar %}
+                <li class="nav-item {% if 'artist' in request.path %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'sitemgr:profiles' %}">directory</a>
+                </li>
+            {% endif %}
+
+
+            {% if site.blogsetting.show_submission_link_in_navbar %}
+                <li class="nav-item {% if 'submission' in request.path %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'submission_view' %}">submissions</a>
+                </li>
+            {% endif %}
+
+        </ul>
+
+        <ul class="navbar-nav">
+
+            {% if not request.user.is_authenticated and site.settings.require_login == True %}
+
+                <li class="nav-item text-uppercase title mb-2 mr-2">
+                    <a class="btn btn-outline-primary btn-sm btn-block" href="{% url 'accounts:login' %}">Log in</a>
+                </li>
+
+                <li class="nav-item text-uppercase title mr-2">
+                    <a class="btn btn-outline-secondary btn-block btn-sm" href="{% url 'accounts:register' %}">Sign up</a>
+                </li>
+
+            {% endif %}
+
+        </ul>
+
+  </div>
+
+</nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

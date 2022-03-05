@@ -1,0 +1,113 @@
+{% extends 'front.html' %}
+{% load i18n %}
+{% load static %}
+{% load site_tags %}
+
+{% block title %}{{ post.user }}{% if post.description %} - "{{ post.description }}"{% endif %}{% endblock title %}
+
+
+{% block css_code %}
+{{ block.super }}
+
+.comment-reply{display: none;}
+.btn-delete{background-color: transparent}
+{% endblock css_code %}
+
+{% block content %}
+
+<div class="container mb-5">
+
+	<div class="row">
+
+		<div class="col-md-8 mb-3">
+
+			<div class="text-center">
+				{% if filter_explicit and post.is_explicit %}
+					<div class="title-0 mb-3">{% trans "This image may contain nudity or explicit content" %}</div>
+					<a href="{{ request.user.profile.edit_url }}" class="btn btn-outline-primary">{% trans "Edit settings" %}</a>
+				{% else %}
+					<img src="{{ post.images.first.url }}" class="img-fluid">
+				{% endif %}
+			</div>
+			
+		</div>
+
+		<div class="col-md-4 post-info">
+			<ul class="list-unstyled">
+
+				<li class="d-flex justify-content-between">
+					{{ post.views.count }} click{{ post.views.count|pluralize:'s' }}
+
+					{% if request.user == post.user %}
+
+						<form action="{{ post.delete_url }}" method="post" class="ml-1">{% csrf_token %}
+							<input type="hidden" name="is_active" value="off">
+							<button type="submit" class="btn-delete pl-0 text-muted border-0">{% trans "Delete post" %}</button>
+						</form>
+
+					{% endif %}
+
+				</li>
+
+				<li>
+					<div class="media mt-2">
+                        {% include "sitemgr/account/profile-photo.html" with img_url=post.user.profile.image.thumbnail.url height=32 width=32 %}
+
+                    	<div class="media-body ml-2">
+                    		<a href="{{ post.user.profile.detail_url }}" class="mr-2 font-weight-bold">{{ post.user.username | lower }}</a>
+            				<span>{{ post.render_description | safe }}</span>
+                    	</div>
+                    </div>
+				</li>
+
+			</ul>
+
+			<div>{% include 'sitemgr/comment.html' with obj=post model='userpost' app='sitemgr' %}</div>
+
+			{% if related %}
+			<div id="masonry-gallery" class="my-4">
+			{% for post in related %}
+				<div class="card w-50 border-0 m-0 p-1" id="item">
+					<a href="{{ post.detail_url }}">{{ post.images.first.render_thumb }}</a>
+				</div>
+			{% endfor %}
+			</div>
+			{% endif %}
+
+		</div>
+
+	</div>
+
+</div>
+
+{% endblock content %}
+
+<script>
+{% block documentready %}
+{{ block.super }}
+
+$(".js-comment").on("click", commentForm);
+$(".js-delete").on("click", deleteForm);
+
+{% endblock documentready %}
+</script>
+
+
+square-img: {{ post.images.first.render }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

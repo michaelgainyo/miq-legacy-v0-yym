@@ -1,0 +1,56 @@
+{% load img_tags %}
+
+{% if object.video_url %}
+    <div class="embed-responsive embed-responsive-16by9 mb-2">
+        <iframe class="embed-responsive-item" src="{{ object.video_url }}" allowfullscreen></iframe>
+    </div>
+{% elif object.covers.count > 0 %}
+    <div id="home-carousel" class="carousel carousel-fade slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            {% if object.covers.count > 1 %}
+            {% for slide in object.covers.all %}
+                <li data-target="#home-carousel" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.counter0 == 0 %}active{% endif %}"></li>
+            {% endfor %}
+            {% endif %}
+        </ol>
+
+        <div class="carousel-inner">
+        {% for slide in object.covers.all %}
+            <div class="carousel-item {% if forloop.counter0 == 0 %}active{% endif %}">
+                {% if slide.cta_url %}
+                    <a href="{{ slide.cta_url }}">
+                {% endif %}
+
+                {% render_img slide.image cls='d-block w-100' alt=site.name %}
+
+                <div class="carousel-caption mb-auto" style=" color: white; transform: translateY(-50%); bottom: 0; top: 50%;">
+                    <h3 class="font-weight-bold display-4">{{ slide.title|default:'' }}</h3>
+                    <div class="lead">{{ slide.description | linebreaks |default:'' }}</div>
+                </div>
+
+                {% if slide.cta_url %}</a>{% endif %}
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

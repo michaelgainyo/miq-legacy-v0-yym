@@ -1,0 +1,66 @@
+{% load static %}
+{% load i18n %}
+{% load site_tags %}
+
+<div class="container">
+
+<div class="my-5 d-flex flex-wrap flex-column-reverse flex-md-row">
+
+	<div class="d-flex flex-column col">
+
+		<div class="h3 my-4">{{ site.name }}</div>
+
+		<div class="d-inline-flex small">
+
+			<span class="mr-2">{% trans "All rights reserved" %}</span>
+			
+			{% if site.settings.privacy_policy %}
+			<span class="mx-2">|</span>
+			<a href="{% url 'sitemgr:privacy' %}">{% trans "Privacy Policy" %}</a>
+        	{% endif %}
+
+			{% if site.settings.tos %}
+			<span class="mx-2">|</span>
+        	<a class="" href="{% url 'sitemgr:tos' %}">{% trans "Terms of Use" %}</a>
+        	{% endif %}
+			
+		</div>
+	</div>
+	
+	<div class="d-flex justify-content-start flex-grow-1 flex-wrap flex-md-row">
+		{% if site.blogsetting.show_in_footer %}
+		<div class="col-md-3 col-6"><ul class="list-unstyled">
+			<li><a href="{{ site.blogsetting.detail_url }}">{{ site.blogsetting.name }}</a></li>
+			{% for cat in site.blogsetting.categories %}
+				<li><a href="{{ cat.detail_url }}">{{ cat }}</a></li>
+			{% endfor %}
+			
+		</ul></div>
+		{% endif %}
+
+		<div class="col-md-3 col-6">
+		<ul class="list-unstyled">
+
+			<li>
+				<a href="{{ site.aboutsetting.detail_url }}">
+					{% blocktrans with about=site.aboutsetting.name|default:'About' %}
+					{{ about }}
+					{% endblocktrans %}
+				</a>
+			</li>
+
+			<li><a href="{% url 'accounts:account' %}">{% trans "My Account" %}</a></li>
+
+			{% if site.settings.faq %}
+				<li><a href="{{ site.settings.faq_url }}">{% trans "Help" %}</a></li>
+			{% endif %}
+		</ul>
+		</div>
+
+		<div class="col-md-3 col-6">{% include "components/social-links.html" %}</div>
+
+	</div>	
+</div>
+
+</div>
+

@@ -1,0 +1,13 @@
+{% extends 'sitemgr/pages/index.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Frequently Asked Questions" %}{% endblock %}
+
+
+{% block content_inner %}
+<div class="mx-4">
+	<div class="mb-4 lead">{% trans "Frequently Asked Questions" %}</div>
+
+	{{ site.settings.faq | safe }}
+</div>
+{% endblock content_inner %}

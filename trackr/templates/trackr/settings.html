@@ -1,0 +1,37 @@
+{% extends 'trackr/index.html' %}
+{% load i18n %}
+{% load trackr_tags %}
+
+
+{% block title %}{% trans "Analytics settings" %}{% endblock %}
+
+{% block ptitle %}{% trans "Analytics settings" %}{% endblock ptitle %}
+
+
+{% block tabcontent %}
+
+    <div class="card card-body border-top-0 rounded-0">
+    {% if form %}
+        {% include 'forms/msgs.html' %}
+
+        <form action="{% if object %}{{object.staff_edit_url}}{% else %}.{% endif %}" method="post" enctype="multipart/form-data" class="">{% csrf_token %}
+
+            {% block form_fields %}
+
+                {% include 'forms/label.html' %}
+
+            {% endblock form_fields %}
+            
+            {% block form_btn %}
+
+                <p>
+                  <input type="submit" value="{% if form_btn_value %}{{ form_btn_value }}{% else %}{% trans "Save" %}{% endif %}" class="btn btn-primary text-uppercase">
+                </p>
+
+            {% endblock form_btn %}
+        
+        </form>
+    {% endif %}
+    </div>
+
+{% endblock tabcontent %}

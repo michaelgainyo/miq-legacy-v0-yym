@@ -1,0 +1,155 @@
+{% extends 'staff/list.html' %}
+{% load i18n %}
+
+{% block css_code %}
+{{ block.super }}
+.table thead th{border-bottom: 0;}
+.table thead{border-top: 0;}
+#results{}
+input[type="text"]{font-size: .9rem;}
+{% endblock css_code %}
+
+{% block ptitle %}Hits[<span id="count">{{ object_list.count }}</span>]{% endblock ptitle %}
+
+
+{% block btn %}{% include "components/pagination-2.html" with page=page_obj %}{% endblock btn %}
+
+{% block content %}
+
+
+<div class="list-group mb-3">
+
+<div class="list-group-item d-flex">
+	<form action="." method="GET" class="d-flex justify-content-between flex-fill">
+	<div class="d-none d-md-block">{% include 'trackr/components/date-filter.html' %}</div>
+
+	<div class="d-flex flex-row">
+        <input type="text" class="form-control" id="kws" placeholder="{% trans "Type keywords to filter the result" %}" name="q" value="{% if q %}{{ q }}{% endif %}" required size="30">
+
+        <div class="form-check form-check-inline pl-2">
+			<input class="form-check-input" type="checkbox" id="is-exact" value="true" name="exact" {% if exact %}checked{% endif %}>
+			<label class="form-check-label pl-1" for="is-exact">{% trans "Exact Match" %}</label>
+		</div>
+    </div>
+    </form>
+</div>
+
+<div class="list-group-item px-0 pt-0 border-top-0">
+
+<div class="table-responsive">
+<table class="table table-sm table-striped table-hover">
+	<thead>
+		<tr>
+			<th scope="col"></th>
+            <th scope="">{% trans "Visitor" %}</th>
+            <th scope="">{% trans "Path" %}</th>
+            <th scope="">OS</th>
+            <th scope="">Browser</th>
+		</tr>
+	</thead>    
+
+	<tbody id="results" >
+	
+	{% for hit in object_list %}
+		<tr class="restore infinite-item">
+		    <td class="small">{{ hit.updated | date }} <div class="small text-muted">{{ hit.created | date }}</div></td>
+		    <td>{{ hit.visitor|default:"" }} <div class="small {% if hit.is_bot %}text-danger{% endif %}">{{ hit.ip }}</div></td>
+		    <td>
+		    	<a href="{{ hit.staff_detail_url }}">{{ hit.path }}</a>
+		    	<div class="small text-muted">{{ hit.user_agent }}</div>
+		    	<div class="small text-info">{% if hit.is_mobile %}Mobile{% endif %}</div>
+		    </td>
+		    <td>{{ hit.os }}</td>
+		    <td>{{ hit.browser }}</td>
+		</tr>
+	{% empty %}
+		<tr>
+		    <td>{% trans "Not enough data" %}</td><td></td><td></td><td></td><td></td>
+		</tr>
+	{% endfor %}
+
+	</tbody>	
+
+</table>
+</div>
+
+</div>
+
+
+</div>
+	
+{% endblock content %}
+
+
+<script>
+{% block documentready %}
+var filter = $('#kws').on('keyup', function(){
+	input = $('#kws');
+
+	if( input.val() == "" ){
+		$("#results .restore").removeClass('d-none');
+		$("#results .temp").addClass('d-none');
+		$("#count").html(200)
+
+	} else {
+		// $("#results").empty();
+
+		$.ajax({
+	        url: '{% url "trackr:hit_list" %}',
+	        type: "GET",
+	        data: {
+	            'q': $('#kws').val(),
+	            'exact': $('#is-exact').is(":checked"),
+	            'date': $('#date-filter .btn').attr('data-range'),
+	            'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+	        },
+
+	        dataType: 'json',
+	        success: function (data) {
+	            var list = "";
+	            console.log('Success');
+
+	            // empty before add
+	            $("#results .restore").addClass('d-none');
+
+	            if (data.is_valid){
+
+	                if (data.qs.length > 0){
+	                    for(i=0; i<data.qs.length; i++){
+	                        var hit = data.qs[i];
+	                        list += '<tr class="temp">'
+			    				+ '<td class="small">'+ hit.created +'</div></td>'
+			    				+ '<td><div class="small">'+ hit.ip +'</div></td><td>'
+			    					+ '<a href="/staff/hit/'+ hit.pk +'">'+ hit.path +'</a>'
+			    					+ '<div class="small text-muted">'+ hit.user_agent +'</div>'
+			    				+ '</td>'
+							+ '</tr>';
+	                    }
+	                    $("#count").html(data.count);
+	                    $("#results .temp").addClass('d-none');
+	                    $("#results").prepend(list);
+	                } else {
+		            	$("#results").append('<tr><td>Not enough data</td><td></td><td></td></tr>');
+					};
+
+	            } else {};
+	            
+	        },
+
+	        error: function(data){
+	            console.log(data);
+
+	        }
+    	});
+	};
+})
+{% endblock documentready %}
+</script>
+
+
+
+
+
+
+
+

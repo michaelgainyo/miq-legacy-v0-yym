@@ -1,0 +1,149 @@
+{% load i18n %}
+{% load img_tags %}
+{% load site_tags %}
+
+{% with selected as img %}
+<div class="px-2 flex-md-row flex-column container-fluid col-9">
+
+    <div class="row mb-3">
+        {# Images #}
+        <div class="col-md-7" id="img-imgs">
+            
+        <div class="row">
+            {# L #}
+            <div class="col-md-6 text-center">
+                <div class="text-muted mb-2">
+                    L: {{ img.file.width }}<span class="small">x</span>{{ img.file.height }} - {{ img.file.size | filesizeformat }}
+                </div>
+
+                <button type="button" class="js-img-update border-0 btn">
+                <img src="{{ img.file.url }}" class="card-img">
+                </button>
+
+                <input class="fileinput" type="file" name="file"
+                    style="display: none;"
+                    data-url="{{ img.staff_edit_url }}"
+                    data-form-data='{
+                        "csrfmiddlewaretoken": "{{ csrf_token }}",
+                        "next": "{{ request.path }}",
+                        "field": "file"
+                    }'>
+            </div>
+
+            {# M #}
+            <div class="col-md-6 text-center">
+                {% if img.thumbnail %}
+                <div class="text-muted mb-2">
+                    M: {{ img.thumbnail.width }}<span class="small">x</span>{{ img.thumbnail.height }} - {{ img.thumbnail.size | filesizeformat }}
+                </div>
+
+                <button type="button" class="js-img-update border-0 btn">
+                <img src="{{ img.thumbnail.url }}" class="img-fluid">
+                </button>
+
+                <input class="fileinput" type="file" name="thumbnail"
+                    style="display: none;"
+                    data-url="{{ img.staff_edit_url }}"
+                    data-form-data='{
+                        "csrfmiddlewaretoken": "{{ csrf_token }}",
+                        "next": "{{ request.path }}",
+                        "field": "thumbnail"
+                    }'>
+                {% endif %}
+            </div>
+
+            {# S #}
+            <div class="col-md-6 text-center">
+                {% if img.m_file %}
+                <div class="text-muted mb-2">
+                    S: {{ img.m_file.width }}<span class="small">x</span>{{ img.m_file.height }} - {{ img.m_file.size | filesizeformat }}
+                </div>
+                {% endif %}
+
+                <button type="button" class="js-img-update border-0 btn">
+                    {% if img.m_file %}
+                <img src="{{ img.m_file.url }}" class="img-fluid">
+                    {% else %}
+                <img src="http://placehold.it/800x1200" class="img-fluid mb-2">
+                    {% endif %}
+                </button>
+
+                <input class="fileinput" type="file" name="m_file"
+                    style="display: none;"
+                    data-url="{{ img.staff_edit_url }}"
+                    data-form-data='{
+                        "csrfmiddlewaretoken": "{{ csrf_token }}",
+                        "next": "{{ request.path }}",
+                        "field": "m_file"
+                    }'>
+            </div>
+
+            {# XS #}
+            <div class="col-md-6 text-center">
+                {% if img.m_thumbnail %}
+                <div class="text-muted mb-2">
+                    XS: {{ img.m_thumbnail.width }}<span class="small">x</span>{{ img.m_thumbnail.height }} - {{ img.m_thumbnail.size | filesizeformat }}
+                </div>
+                {% endif %}
+
+                <button type="button" class="js-img-update border-0 btn">
+                    {% if img.m_thumbnail %}
+                <img src="{{ img.m_thumbnail.url }}" class="img-fluid">
+                    {% else %}
+                <img src="http://placehold.it/800x1200" class="img-fluid mb-2">
+                    {% endif %}
+                </button>
+
+                <input class="fileinput" type="file" name="m_thumbnail"
+                    style="display: none;"
+                    data-url="{{ img.staff_edit_url }}"
+                    data-form-data='{
+                        "csrfmiddlewaretoken": "{{ csrf_token }}",
+                        "next": "{{ request.path }}",
+                        "field": "m_thumbnail"
+                    }'>
+            </div>
+        </div>
+        </div>
+
+        {# INFO #}
+        <div class="col-md-5">
+            {# UPDATE #}
+            <form action="{{ img.staff_edit_url }}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                {{ img_form.as_p }}
+                <input type="hidden" name="next" value="{{ request.path_info }}">
+                {% render_btn icn='save' cls='btn-primary btn-sm btn-block' cta='Save' %}
+            </form>
+
+            {# DELETE FORM #}
+            <form action="{{ img.staff_delete_url }}" method="get">
+                <input type="hidden" value="{{ request.path_info }}" name="next">
+                {% render_btn icn='trash-2' cta='' cls='btn-outline-danger border-0 my-3' %}
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endwith %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

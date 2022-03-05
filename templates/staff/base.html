@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load site_tags %}
+{% load staff_tags %}
+
+<style>
+{% block css_code %}
+body {font-size: .875rem;} 
+
+/*a{text-transform: lowercase;}*/
+
+/*.main{}*/
+.main{
+    background-color: #f8f9fa!important;
+    /*overflow-y: auto; height: calc(100vh);*/
+}
+
+.sidebar {
+    /*position: fixed;*/
+    /*top: 0;*/
+    /*bottom: 0;*/
+    /*left: 0;*/
+    z-index: 100; /* Behind the navbar */
+    /*box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);*/
+}
+
+.sidebar-sticky {
+    /*position: relative;*/
+    /*top: 0;*/
+    /*height: calc(100vh - 48px);*/
+    
+    overflow-y: auto; height: calc(100vh);
+    padding-top: .5rem;
+    /*overflow-x: hidden;*/
+     /* Scrollable contents if viewport is shorter than content. */
+}
+
+.sidebar .nav-link {color: #333;}
+
+.sidebar .nav-link .feather {margin-right: 4px; color: #999;}
+
+.sidebar .nav-link.active {color: #007bff;}
+
+.sidebar .nav-link:hover .feather,
+.sidebar .nav-link.active .feather {color: inherit;}
+
+.sidebar-heading {font-size: .75rem; text-transform: uppercase;}
+
+{% endblock css_code %}
+</style>
+
+{% block body %}
+
+    <header>{% show_staff_navbar %}</header>
+
+    <main class="d-flex flex-row" role="main">
+
+        {# slideout sidebar #}
+        <div class="modal fade" id="side-modal" tabindex="-1" role="dialog" aria-labelledby="side-modal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-slideout modal-sm" role="document">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-content border-0">
+                    {% show_staff_sidebar %}
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-md-row flex-column w-100 pt-3">
+            <div class="d-none d-md-block d-lg-block" style="min-width: 150px;">
+                <nav class="d-none d-md-block pb-4">{% show_staff_sidebar %}</nav>
+            </div>
+
+            <div class="flex-grow-1 main border-left">
+
+                <div class="d-flex justify-content-between align-items-center p-2 flex-wrap my-3 pt-4">
+                    <div style="font-size: 1.1rem;" class="lead">{% block ptitle %}{% trans "Dashboard" %}{% endblock ptitle %}</div>
+
+                    <div class="">{% block btn %}{% endblock btn %}</div>
+                </div>
+
+                <div class="mx-2">
+                {% block content %}
+                    {% if form %}
+                        {% include 'forms/msgs.html' %}
+
+                        <form action="." method="post" enctype="multipart/form-data" class="">{% csrf_token %}
+                            {% include 'forms/label.html' %}
+                            {% render_btn icn='save' cls='btn-primary btn-block' cta='Save' %}
+                        </form>
+                    {% endif %}
+
+                {% endblock content %}
+
+                {% include 'staff/components/footer.html' %}
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    {% block modal %}
+        <!-- Modal -->
+
+        <div class="modal fade" id="modal-progress" tabindex="-1" role="dialog" aria-labelledby="modal-progressTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">uploading ...</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <a href="{{ request.path }}" class="btn btn-sm btn-outline-primary">back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock modal %}
+
+{% endblock body %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
+{% endblock scripts %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

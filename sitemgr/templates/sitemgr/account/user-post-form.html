@@ -1,0 +1,48 @@
+{% load i18n %}
+
+
+<form action="{% url 'accounts:account' %}" method="post" enctype="multipart/form-data" class="form">{% csrf_token %}
+<div class="card-body">
+    <div class="tab-content">
+
+        <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+            <div class="form-group">
+                <label class="sr-only" for="description">{% trans "Post" %}</label>
+                <textarea class="form-control" id="description" name="description" rows="3" placeholder="{% trans "credits, description, etc" %}"></textarea>
+            </div>
+
+            <div class="form-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input {% if form.file.errors %}is-invalid{% endif %}" name="file" required>
+                    <label class="custom-file-label" for="file">{% trans "Choose image" %}</label>
+                    <div class="invalid-feedback">{{ form.file.errors }}</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" value="True" class="custom-control-input" id="is_explicit" name="is_explicit">
+            <label class="custom-control-label" for="is_explicit">{% trans "Contains nudity" %}</label>
+        </div>
+
+    </div>
+
+    <div class="btn-toolbar justify-content-between">
+        <div class="btn-group">
+            
+            {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+
+            <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+
+        </div>
+    </div>
+
+</div>
+</form>
+
+
+
+
+
+

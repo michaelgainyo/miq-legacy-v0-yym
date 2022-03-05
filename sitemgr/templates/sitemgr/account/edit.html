@@ -1,0 +1,132 @@
+{% extends "sitemgr/account/index.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Account settings" %}{% endblock title %}
+
+{% block main %}
+
+<div class="py-3">
+<form class="form mb-4" method="post" action=".">{% csrf_token %}
+	{% with user_form as form %}
+		{% include 'forms/label.html' %}    
+	{% endwith %}
+
+	{% if perms.sitemgr.add_userpost %}
+	{% with creator_form as form %}{% include 'forms/label-no-msg.html' %}{% endwith %}
+	{% endif %}
+
+	{% include 'forms/label-no-msg.html' %}
+
+	<div class="custom-control custom-checkbox">
+        <input class="custom-control-input" name="is_subbed" type="checkbox" id="is_subbed">
+        <label class="custom-control-label" for="is_subbed">{% trans "Receive email notifications" %}</label>
+    </div>
+	
+	<div class="text-center">
+		<input type="submit" value="{% trans "Update" %}" class="btn btn-primary my-3 btn-block">
+	</div>
+
+</form>
+</div>
+
+{% endblock main %}
+
+
+{% block rightbar %}
+<nav class="col-md-2 mt-3">
+
+{# profile photo #}
+<div class="d-flex justify-content-center flex-column align-items-center">
+    {% include "sitemgr/account/profile-photo.html" with img_url=request.user.profile.image.thumbnail.url height=150 width=150 %}
+
+    <button type="button" class="btn-sm border-0 text-primary js-upload-photos my-3">{% trans "Change Profile Photo" %}</button>
+    
+
+    <input id="fileupload" type="file" name="file"
+        style="display: none;"
+        data-url="{{ request.user.profile.edit_url }}"
+        data-form-data='{
+        "csrfmiddlewaretoken": "{{ csrf_token }}",
+        "app": "{{ app_name }}",
+        "model": "{{ model_name }}",
+        "pk": "{{ object.pk }}",
+        "next": "{{ request.path }}"
+        }'>
+</div>
+
+{# account type #}
+{% if site.postsetting.allow_user_to_post %}
+<div class="text-center mb-3">
+    <button type="button" class="text-primary btn-sm border-0" data-toggle="modal" data-target="#creator-modal">
+        {% if perms.sitemgr.add_userpost %}
+            {% trans "Switch to personal account" %}
+        {% else %}
+            {% trans "Switch to creator account" %}
+        {% endif %} 
+    </button>
+</div>
+{% endif %}
+</nav>
+
+{% endblock rightbar %}
+
+
+{% block modal %}
+<!-- Modal -->
+
+{% if site.postsetting.allow_user_to_post %}
+<form action="." method="post" enctype="multipart/form-data">{% csrf_token %}
+<div class="modal fade" id="creator-modal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+
+    <div class="modal-header">
+        <h5 class="modal-title">
+        	{% if perms.sitemgr.add_userpost %}
+                {% trans "Switch to personal account" %}
+            {% else %}
+                {% trans "Switch to creator account" %}
+            {% endif %}
+        </h5>
+    </div>
+
+    <div class="modal-body">
+    	{% if perms.sitemgr.add_userpost %}
+    		<p>{% trans "Are you sure you want to switch your account back to personal" %}?</p>
+    		<p>{% trans "Your posts will be deleted" %}</p>
+    		<input type="hidden" name="is_creator" value="remove" />
+    	{% else %}
+    		<p>{% trans "With a creator account, you can now share your own content" %}</p>
+    		<input type="hidden" name="is_creator" value="add" />
+    	{% endif %}
+        
+        <input type="hidden" name="next" value="{{ request.path }}" />
+    </div>
+
+    <div class="modal-footer text-center">
+        <input type="submit" class="btn btn-primary btn-sm" value="Save">
+    </div>
+
+</div>
+</div>
+</div>
+</form>
+{% endif %}
+{% endblock modal %}
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,19 @@
+
+<div class="text-center lead font-weight-bold">{{ site.name }}</div>
+
+<div class="d-flex h-100 p-3 flex-column">
+
+    <header class="mt-auto text-center mb-5">
+
+        <div class="mb-5">{% include 'sitemgr/pages/index-header.html' %}</div>
+
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </header>
+
+    <main role="main">
+        <div class="text-center mx-auto">{{ site.settings.close_site_message }}</div>
+    </main>     
+</div>
+

@@ -1,0 +1,113 @@
+{% load static %}
+{% load trackr_tags %}
+
+{% spaceless %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<!-- This is marQetIntel -->
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta itemprop="name" content="{{ site.name }}"/>
+
+	{% block head %}{% endblock head %}
+
+	{% block meta %}{% endblock meta %}
+
+	<link rel="shortcut icon" type="image/x-icon" href="{{ site.settings.icon_url }}">
+
+	<title>{% if title %}{{ title }}{% else %}{% block title %}{% endblock title %}{% endif %} | {{ site.name | lower }}</title>
+
+	<link rel="canonical" href="{{ request.path_info }}">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+	<link href="{% static "css/style.css" %}?{% now "U" %}" rel="stylesheet">
+
+	<style type="text/css">{% block css_code %}{% endblock css_code %}</style>
+
+	{% block head_scripts %}{% endblock head_scripts %}
+
+	<script type="application/ld+json">{{ site.settings.json_ld|safe }}</script>
+	{% block jsonld %}{% endblock jsonld %}
+
+</head>
+
+<body data-spy="scroll" data-target="#sidebar-main">
+
+<div class="body-wrapper h-100">
+
+	{% block body %}{% endblock body %}
+
+	<!-- Bootstrap -->
+	{# // <script src="https://code.jquery.com/jquery-3.3.1.js"></script> #}
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+	<!-- Masonry -->
+	<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.iframe-transport/1.0.1/jquery.iframe-transport.min.js"></script>
+
+	{# // <script src="{% static 'js/jquery.ui.widget.js' %}"></script> #}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+	<script src="{% static 'js/jquery.fileupload.js' %}"></script>
+	{# <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-jquery-file-upload/2.7.4/cloudinary-jquery-file-upload.min.js" integrity="sha256-pqt2wiXfoLi1FUTmtEJM+cqbOMyOWX2wuOL22KY1N2E=" crossorigin="anonymous"></script> #}
+
+	{# // <script src="{% static 'js/jquery-cropper.min.js' %}"></script> #}
+
+	<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+	<script src="{% static 'js/infinite.min.js' %}"></script>
+
+	<script src="{% static 'js/scripts.js' %}?{% now "U" %}"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			{% block documentready %}{% endblock documentready %}
+		});
+
+		feather.replace();
+					
+		var i = false;
+		function getStat(){
+			if (i == false){
+				$.ajax({
+					url: '{% url "sitemgr:log_status" %}',
+					success: function(data){},
+					error: function(){},
+					complete: function(){}
+				})
+			}
+		};
+
+		$(window).on('focus', function(){i = false});
+		$(window).on('blur', function(){i = true});
+
+		getStat();
+
+		setInterval(function(){
+			getStat();
+		}, 180000);
+
+		
+	</script>
+	{% block scripts %}{% endblock scripts %}
+
+</div><!-- /body-wrapper -->
+</body>
+
+</html>
+{% endspaceless %}
+

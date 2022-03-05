@@ -1,0 +1,79 @@
+{% load img_tags %}
+
+
+<div class="list-group">
+
+<div class="list-group-item">
+{% if obj.gallery_layout == 'slideshow' %}
+    <div class="d-flex justify-content-between align-items-center">
+
+        <span class="lead">{% if obj.gallery %}Slides{% else %}Images{% endif %}</span>
+
+        {% if not article.gallery %}
+        <form action="{% url 'filemgr:staff_gallery_create' %}" method="post">{% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}" />
+
+            <input type="hidden" name="name" value="{{ article.title }}" />
+            <input type="hidden" name="description" value="Gallery for {{ article.title }}" />
+            
+            <input type="hidden" name="pk" value="{{ article.pk }}" />
+            <input type="hidden" name="app" value="blog" />
+            <input type="hidden" name="model" value="article" />
+
+            <input type="submit" class="btn btn-primary btn-sm" value="Add Slider">
+        </form>
+
+        {% elif article.gallery %}
+            <div class="form-group">
+            <input id="is-slider" class="form-check-input" type="checkbox" value="{% if object.gallery.is_slider %}True{% endif %}" {% if object.gallery.is_slider %}checked{% endif %} name="is_slider">
+            <label class="form-check-label" for="featured">Is Slider</label>
+            </div>
+        {% endif %}
+
+    </div>
+{% else %}
+    <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-primary js-upload-photos">
+            <div class="d-flex align-items-center">
+                Add images
+                <span data-feather="upload-cloud" class="ml-2"></span>
+            </div>
+        </button>
+
+        <input id="fileupload" type="file" name="file" multiple
+            style="display: none;"
+            data-url="{% url 'filemgr:img_upload' %}"
+            data-form-data='{
+            "csrfmiddlewaretoken": "{{ csrf_token }}",
+            "app": "{{ app_name }}",
+            "model": "{{ model_name }}",
+            "pk": "{{ obj.pk }}",
+            "next": "{{ request.path }}"
+            }'>
+    </div>
+{% endif %}
+</div>
+
+{% if selected %}
+<div class="list-group-item">{% render_img selected cls='img-fluid' %}</div>
+{% endif %}
+
+<div class="list-group-item"><div class="row" id="staff-imgs-list">
+{% for img in imgs.all %}
+    <div class="col-md-3 col-sm-4 col-6 order-1 mb-1 {% if img.pk == selected.pk %}btn-primary{% endif %}">
+
+    
+        <a href="{{ request.path_info }}?img={{ img.pk }}" alt="{{ img.order }}">
+            {% render_img img cls='img-fluid' %}
+        </a>
+    </div>
+    
+{% empty %}This {{ model_name }} has no slides/images{% endfor %}
+</div></div>
+
+</div>
+
+
+
+
+

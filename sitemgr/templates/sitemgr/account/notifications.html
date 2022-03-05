@@ -1,0 +1,46 @@
+{% extends "sitemgr/account/index.html" %}
+{% load i18n %}
+{% load site_tags %}
+
+
+{% block title %}{{ request.user.username }}{% endblock title %}
+
+{% block form %}
+{% if most_popular.count > 0 %}
+<div class="border-bottom my-3 px-2">
+    <h6>Most clicked</h6>
+    <div class="d-flex justify-content-between py-3">
+    {% for post in most_popular %}
+        <a href="{{ post.detail_url }}">
+        <img src="{{ post.image.m_file.url }}" width="50" class="img-fluid rounded" alt="{{post.views_count}} views(s)">
+        </a>
+    {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+
+<div class="infinite-container">
+{% for event in object_list %}
+    <div class="infinite-item">
+        <div class="d-flex align-items-center justify-content-between px-2 my-2">
+            <div class="d-flex align-items-center">
+                <a href="{{ event.viewer.profile.detail_url }}">
+                    {% include "sitemgr/account/profile-photo.html" with img_url=event.viewer.profile.image.thumbnail.url height=40 width=40 %}
+                </a>
+                <span class="ml-2 mr-1">{{ event.viewer.username }}</span>
+                <span class="font-weight-light">{% trans "clicked on your post" %}</span>
+            </div>
+
+            <a href="{{ event.post.detail_url }}">
+                <img src="{{ event.post.image.m_file.url }}" alt="{{ event.post.pk }}" width="45" class="img-fluid rounded">
+            </a>
+        </div>
+    </div>
+{% empty %}<div class="card-body">{% trans "No clicks" %}</div>{% endfor %}
+</div>
+
+{% endblock form %}
+
+
+{% block feed %}{% endblock feed %}

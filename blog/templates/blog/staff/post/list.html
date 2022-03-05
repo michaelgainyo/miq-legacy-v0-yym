@@ -1,0 +1,54 @@
+{% extends "staff/list.html" %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+
+<div class="" id="gallery">
+
+{% for post in object_list %}
+
+<div class="w-25 m-0 p-1" id="item">
+    <div class="card p-2">
+        <a href="{{ post.detail_url }}">
+            <img src="{{ post.images.first.thumbnail.url }}" class="card-img-top">
+        </a>
+
+        <div class="card-body pb-0">
+            <ul class="list-unstyled">
+                <li>{{ post.views.count }} views</li>
+                <li>{{ post.description }}</li>
+            </ul>
+        </div>
+
+        <div class="card-footer d-flex justify-content-between">
+            <a class="btn btn-sm btn-outline-secondary" href="{{ post.staff_delete_url }}">delete</a>
+            <a class="btn btn-sm btn-outline-primary" href="{{ post.staff_edit_url }}">edit</a>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+{% endblock content %}
+
+
+{% block documentready %}
+
+var $container = $('#gallery');
+  $container.masonry({
+      columnWidth: '#item',
+      itemSelector: '#item'
+    }); 
+
+$container.imagesLoaded(function() {
+  $container.masonry('layout');
+    
+});
+
+{% endblock documentready %}

@@ -1,0 +1,80 @@
+{% extends 'sitemgr/staff/setting/base.html' %}
+{% load i18n %}
+
+
+{% block ptitle %}{% trans "User Comments" %}{% endblock ptitle %}
+
+
+{% block content %}
+
+{% if object_list %}
+{% for comment in comments %}
+    <div class="card">
+    <div class="media card-body">
+        {% if comment.content_object.image %}
+            <a href="{{ comment.content_object.detail_url }}">
+            <img src="{{ comment.content_object.image.thumbnail.url }}" class="mr-3 " style="width: 100px;">
+            </a>
+        {% endif %}
+        
+        <div class="media-body">
+            <h6 class="mt-0">{{ comment.user.username }}</h6>
+            
+            <div class="d-flex flex-coumn justify-content-between">
+                {{ comment.body }}
+
+                <form action="{{ comment.deactivate_url }}" method="post" class="mt-3">{% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}" />
+                    <input type="hidden" name="active" value="off">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">{% trans "Delete" %}</button>
+                </form>
+            </div>
+                
+        </div>
+    </div>
+    </div>
+{% endfor %}
+{% else %}
+    <p class="text-center h5 text-muted card-body">
+        <span data-feather="message-circle" style="width:100px; height:100px;">
+    </p>
+    
+    <p class="text-center h5 text-muted font-weight-light card-body">
+        {% trans "There are no comments" %}
+    </p>
+{% endif %}
+{% endblock content %}
+
+<form action="." method="post" class="mt-1">{% csrf_token %}
+    
+    <input type="hidden" name="pk" value="{{ post.pk }}" />
+
+    <div class="card-footer text-center">
+        <input type="submit" value="{% trans "Update" %}" class="btn btn-outline-primary btn-sm">
+        <button value="delete" class="btn btn-outline-secondary ml-2 btn-sm" name="action">{% trans "Delete" %}</button>
+    </div>
+
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+<table width="100%" cellspacing="0" cellpadding="0" class="main-wrapper" style="font-size: 1rem;">
+    <tr>
+        <td align="center">
+        <table class="main" width="580" cellspacing="0" cellpadding="0" border="0">
+            <!-- introductory message -->
+            <tr>
+                <td class="header">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="left" valign="middle" class="left">
+                                <span style="font-size: 12px; color:#fff"></span><br>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <!-- logo -->
+            <tr>
+                <td height="50" align="center" valign="top">
+                    <table width="580" border="0" cellspacing="0" cellpadding="0">
+
+                        <tr>
+
+                            <td align="center">
+                                <a href="{{ site.domain }}" style="text-decoration: none; margin-bottom: 1rem; font-weight: 500;font-size: 1.2rem; color: #000">{{ site.name }}
+                                </a>
+                                
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                </td>
+            </tr>
+
+            <!-- message -->
+            <tr>
+                <td align="center" valign="top">
+                    <table width="580" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td valign="top" align="center">
+                                <p>Please take a second to make sure we got it all right. It's easy, just click on the button below.</p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td valign="top" align="center">
+                                <p style="margin-bottom: 2rem; margin-top: 1.5rem;">
+                                    <a href="http://{{ site.domain }}{% url 'accounts:register_done' uidb64=uid token=token %}" style="color: #007bff; border: 1px solid #007bff; text-align: center; padding: .375rem .75rem; border-radius: .25rem; text-decoration: none;">Complete registration</a>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Final message -->
+            <tr>
+                <td>
+                    <table width="580" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="580" valign="top" align="center">
+                                <p>
+                                    Didn't sign up for {{ site.name }}? Simply, let us know by replying to this email.
+                                </p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td align="center"><a href="{{ site.url }}" target="_blank">{{ site.url_display }}</a></td>
+                        </tr>
+
+                        <tr>
+                            <td style="font-size:12px; color: rgba(0,0,0,.5);" align="middle"> 
+                            	This message was intended for {{ user.username }}.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="" valign="middle" align="left" height="50">
+            <p>&nbsp;</p>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

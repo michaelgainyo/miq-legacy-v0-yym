@@ -1,0 +1,13 @@
+{% if site.blogsetting.show_in_navbar %}
+<nav class="nav flex-column">
+    <a class="nav-link" href="{{ site.blogsetting.detail_url }}">
+        {{ site.blogsetting.name|default:'Blog' }}
+    </a>
+
+    {% for cat in categories %}
+        {% if cat.articles.count > 0 %}
+        <a class="nav-link my-1" href="{{ cat.detail_url }}">{{ cat | capfirst }}</a>
+        {% endif %}
+    {% endfor %}
+</nav>
+{% endif %}

@@ -1,0 +1,18 @@
+{% load site_tags %}
+{% load blog_tags %}
+
+{% show_navbar %}
+
+<div class="py-1 mb-2">
+    <nav class="nav d-flex justify-content-between pr-3 pl-3">
+
+    	{% show_blog_nav_categories %}
+
+		{% if site.settings.submission_terms %}
+
+        	<a class="p-2 title nav-link" href="{% url 'submission_view' %}">submit</a>
+        	
+        {% endif %}
+
+    </nav>
+</div>

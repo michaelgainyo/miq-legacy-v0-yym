@@ -1,0 +1,241 @@
+{% extends 'staff/edit-tabs.html' %}
+
+
+<style>
+{% block css_code %}
+{{ block.super }}
+
+textarea[name*="html"]{height: 100vh;}
+
+{% endblock css_code %}
+</style>
+
+{% block btn %}
+<a href="{% url 'blog:article_list' %}" class="btn btn-sm btn-outline-primary">back to articles</a>
+{% endblock btn %}
+
+
+{% block leftmenu %}
+{% if articles %}
+<div class="list-group col-md-3 d-none d-md-block">
+    <div class="list-group-item lead">Articles</div>
+    <div class="list-group-item">
+        <input type="text" id="p-search" class="form-control" placeholder="Type to filter articles" style="font-size: 95%;">
+    </div>
+
+    <div id="results">
+        {% for p in articles %}
+        <div class="list-group-item">
+            <a href="{{ p.staff_edit_url }}" class="{% if object == p %}text-primary{% endif %}">{{ p.title }}</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock leftmenu %}
+
+
+{% block tabnav %}
+<nav class="nav-primary card">
+  <div class="nav nav-pills" id="nav-tab" role="tablist">
+    <a class="nav-item nav-link {% if tab == 'home' %}active{% endif %}" href="{{ object.staff_edit_url }}" role="tab" aria-controls="nav-home" aria-selected="true">Info</a>
+
+    {% if object %}
+
+        {% if object.gallery_layout == 'slideshow' %}
+            <a class="nav-item nav-link {% if tab == 'slideshow' %}active{% endif %}" href="{{ object.staff_slideshow_url }}" role="tab">Slideshow</a>
+        {% else %}
+            <a class="nav-item nav-link {% if tab == 'images' %}active{% endif %}" href="{{ object.staff_images_upload_url }}" role="tab">Images</a>
+        {% endif %}
+
+        <a class="nav-item nav-link {% if tab == 'html' %}active{% endif %}" href="{{ object.staff_html_url }}" role="tab">Html</a>
+
+        <a class="nav-item nav-link {% if tab == 'insight' %}active{% endif %}" href="{{ object.staff_detail_url }}" role="tab">Insight</a>
+    {% endif %}
+
+  </div>
+</nav>
+{% endblock tabnav %}
+
+{% block tab %}
+<form action="." method="post">{% csrf_token %}
+
+    <div class="row">
+
+        <div class="col-md-9">
+            {% include 'forms/label-no-msg.html' %}
+
+            <div class="mb-4">
+
+                <div action="" class="my-3">
+                    <label for="u-search">Tag authors</label>
+                    <input type="text" id="u-search" class="form-control" placeholder="Search author to tag">
+
+                    <div class="my-3" id="results"></div>
+                </div>
+
+                {# {% if article.artists.count > 0 %} #}
+                <div id="authors" class="list-group">
+                    {% for u in article.artists.all %}
+                    <div class="d-flex align-items-center justify-content-between list-group-item" id="{{ u.pk }}">
+                        <div class="d-flex align-items-center">
+                        {% include "sitemgr/account/profile-photo.html" with img_url=u.profile.image.thumbnail.url height=40 width=40 %}
+                        <span class="ml-2 mr-1">{{ u.username }}</span>
+                        </div>
+
+                        <button type="button" class="js-rem-uid btn-sm border-0 btn-outline-danger" data-uid="{{ u.pk }}" data-action="rem-uid">
+                            <span data-feather="trash-2"></span>
+                        </button>
+
+                    </div>
+                    {% endfor %}
+                </div>
+                    
+                {# {% endif %} #}
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-body">
+            {% if perms.blog.publish_article %}
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" value="True" {% if object.feature %}checked{% endif %} name="is_featured" id="featured">
+                <label class="form-check-label" for="featured">Feature this article</label>
+            </div>
+
+            <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" value="True" id="publish" {% if object.publish %}checked{% endif %} name="is_published">
+                <label class="form-check-label" for="publish">Publish this article</label>
+            </div>
+            {% endif %}
+
+            <p><input type="submit" value="Save Article" class="btn btn-sm btn-primary btn-block"></p>
+
+            </div>
+        </div>
+
+    </div>
+
+</form>
+{% endblock tab %}
+
+<script>
+{% block documentready %}
+
+var addUid = $('#results').on('click', '.js-add-uid', function(){
+
+    $.ajax({
+        url: '{{ article.staff_edit_url }}',
+        type: "POST",
+        data: {
+            'uid': $(this).attr('data-uid'),
+            'action': $(this).attr('data-action'),
+            'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+        },
+        success: function (data) {
+
+            if (data.is_valid){
+                $("#results").empty();
+
+                cont = '<div class="d-flex align-items-center justify-content-between list-group-item" pk="' + data.pk + '">'
+                    + '<div class="d-flex align-items-center">'
+                        + '<img class="rounded-circle mr-2" src="' + data.img + '" height="32">'
+                        + '<span>' + data.username + '</span>'
+                    + '</div>'
+                    + '<button type="button" class="js-rem-uid btn-sm border-0 btn-outline-danger" data-uid="' + data.pk + '" data-action="rem-uid"><span data-feather="trash-2"></span></button>'
+                + '</div>';
+
+                $(cont).hide().prependTo('#authors').fadeIn(500);
+
+            }
+            
+        },
+    });
+});
+
+var remUid = $('#authors').on('click', '.js-rem-uid', function(){
+
+    $.ajax({
+        url: '{{ article.staff_edit_url }}',
+        type: "POST",
+        data: {
+            'uid': $(this).attr('data-uid'),
+            'action': $(this).attr('data-action'),
+            'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+        },
+        success: function (data) {
+            if (data.is_valid){
+                // $('#' + data.pk).hide({duration : 500, complete: function(){$('#' + data.pk).remove();}});
+                // $('#' + data.pk).fadeOut("slow", function(){$('#' + data.pk).remove();}););
+                div = '#' + data.pk
+                $(div).slideDown("slow", function(){$('#' + data.pk).remove();});
+                // $('#' + data.pk).remove();
+            }
+            
+        },
+    });
+});
+
+var searchU = $('#u-search').on('keyup', function(){
+
+    $.ajax({
+        url: '{{ article.staff_edit_url }}',
+        type: "GET",
+        data: {
+            'q': $('#u-search').val(),
+            'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+        },
+        success: function (data) {
+            var list = "";
+            
+            // empty before add
+            $("#results").empty();
+
+            if (data.is_valid){
+                if (data.qs.length > 0){
+                    for(i=0; i<data.qs.length; i++){
+                        var u = data.qs[i];
+                        list += '<div class="d-flex my-2 align-items-center justify-content-between">'
+                            + '<div class="d-flex my-2 align-items-center">'
+                                + '<img class="rounded-circle mr-2" src="/media/' + u.profile__image__thumbnail + '" height="32">'
+                                + '<span>' + u.username + '</span>'
+                            + '</div>'
+                            + '<button type="button" class="border-0 text-primary js-add-uid" data-uid="' + u.pk + '" data-action="add-uid">Add</button>'
+                        + '</div>';
+                    }
+                    // $("#results").prepend(list);
+                    $(list).hide().prependTo('#results').fadeIn(500);
+                } else {
+                    $("#results").prepend('No result ...');
+
+                }
+
+            }
+            
+        },
+
+        error: function(data){
+            console.log(data);
+
+        }
+    });
+})
+
+{% endblock documentready %}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

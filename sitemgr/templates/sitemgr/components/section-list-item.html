@@ -1,0 +1,16 @@
+<div class="d-flex flex-column text-center">
+	{% if section.has_items %}
+    <div class="col-md-8 p-0 offset-md-2">{% include 'sitemgr/components/section.html' %}</div>
+    {% endif %}
+
+    <div class="d-flex flex-row justify-content-center flex-wrap align-items-center">
+        {% for sect in section.sections.all %}
+        {% if sect.has_items %}
+            <div class="px-1
+            {% if section.columns_count == 3 %}col-4
+            {% else %}col-6
+            {% endif %}">{% include 'sitemgr/components/section.html' with section=sect %}</div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>

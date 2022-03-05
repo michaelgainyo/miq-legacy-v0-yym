@@ -1,0 +1,13 @@
+{% extends 'sitemgr/pages/index.html' %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Privacy policy" %}{% endblock %}
+
+{% block content_inner %}
+<div class="mx-4">
+	<div class="mb-4 lead">{% trans "Privacy" %}</div>
+	{{ site.settings.privacy_policy | safe }}
+</div>
+{% endblock content_inner %}
+

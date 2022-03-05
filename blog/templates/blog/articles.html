@@ -1,0 +1,107 @@
+{% extends 'blog/base.html' %}
+{% load i18n %}
+{% load static %}
+{% load img_tags %}
+
+<style>
+{% block css_code %}{{ block.super }}
+
+@media(min-width: 1199.98px){
+    /*.infinite-container{overflow-y: auto; height: calc(100vh)}*/
+}
+
+{% endblock css_code %}
+</style>
+
+ transform: translateY(-30%); bottom: 0; top: 40%;
+{% block content_inner %}
+
+{% if featured and featured.image.url %}
+<div class="">
+
+<div id="home-carousel" class="carousel carousel-fade slide" data-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+        <a href="{{ featured.detail_url }}">
+            
+            {% render_img featured.image_landscape cls="d-block w-100" alt=featured.title %}
+        </a>
+        </div>
+    </div>
+</div>
+
+<div class="text-center card-body" style="color: {{ site.blogsetting.featured_text_hex|default:'white' }};">
+    <h1 class="font-weight-bold lead" style="font-size: 1.5rem;">{{ featured.title }}</h1>
+    <div style="font-size: 1.1rem;">{{ featured.description | truncatewords:20 | linebreaks }}</div>
+</div>
+
+
+</div>
+{% else %}<div class="mb-4 mx-4 lead">{{ category|default:site.blogsetting.name | capfirst }}</div>
+{% endif %}
+
+
+<div class="mx-md-3 mt-4 d-flex flex-md-row flex-column">
+
+<div class="infinite-container">
+{% for article in object_list %}
+    <div class="{% if not forloop.last %}border-bottom{% endif %} my-3 infinite-item">
+
+        <div class="mx-3 mb-4">
+            <h3 class="mb-2"><a href="{{ article.detail_url }}">{{ article.title | upper }}</a></h3>
+            <span class="d-block text-muted">{{ article.created | date }}</span>
+        </div>
+
+        {% if article.image %}
+            <a href="{{ article.detail_url }}">{% render_img article.image_landscape cls='card-img rounded-0 mb-3' %}</a>
+        {% endif %}
+
+        <div class="card-body py-0">
+            {% if not category and site.blogsetting.show_category %}
+                <div class="mb-2 text-muted">{{ article.category.name }}</div>
+            {% endif %}
+
+            <p>
+                {% if article.html %}
+                    {{ article.html | safe | truncatewords:"129" }}
+                {% else %}
+                    {{ article.description | linebreaks | truncatewords:"129" }}
+                {% endif %}
+
+                {% if article.description or article.html %}
+                <a href="{{article.detail_url}}" class="font-weight-bold text-primary d-block my-2">READ MORE</a>
+                {% endif %}
+            </p>
+
+        </div>
+
+    </div>
+
+{% endfor %}
+
+<div class="loading" style="display: none;">Loading...</div>
+{% if page_obj.has_next %}
+    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">{% trans "More" %}</a>
+{% endif %}
+
+</div>
+
+<div class="col-md-4 d-flex flex-column-reverse flex-md-column"></div>
+</div>
+
+{% endblock content_inner %}
+
+
+{% if object_list %}
+    <div id="masonry-gallery">
+
+        {% for article in object_list %}
+        <div id="item" class="col-6 col-md-4 p-1">{% include 'blog/article-card.html' %}</div>
+        {% endfor %}
+
+    </div>
+
+    {% if page_obj %}{% include "components/pagination-2.html" with page=page_obj %}{% endif %}
+
+    {% else %}<div class="text-center">{% include 'components/empty.html' %}</div>{% endif %}
+

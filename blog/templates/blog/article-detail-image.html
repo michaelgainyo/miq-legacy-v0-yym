@@ -1,0 +1,16 @@
+{% load static %}	
+
+{% if image.is_explicit and request.user.is_authenticated == False %}
+	<form action="{% url 'accounts:login' %}" method="get">
+	    <input type="hidden" name="next" value="{{ object.detail_url }}">
+	    <button type="submit" style="background-color: transparent; border: 0;">
+	    <img src="{% static "explicit.jpg" %}" alt="explicit content" class="img-fluid mb-3">
+	    </button>
+	</form>
+{% else %}
+	{% if image.external_url %}<a href="{{ image.external_url }}">{% endif %}
+    <div class="mb-1 text-center">
+        <img class="img-fluid" src="{{ image.url }}" alt="{% if image.alt_text %}{{ image.alt_text }}{% else %}{{ article.title }}{% endif %}">
+    </div>
+	{% if image.external_url %}</a>{% endif %}
+{% endif %}

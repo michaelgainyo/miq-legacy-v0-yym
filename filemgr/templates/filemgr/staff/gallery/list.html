@@ -1,0 +1,51 @@
+{% extends 'staff/list.html' %}
+
+{% block title %}Files{% endblock title %}
+
+{% block ptitle %}Files{% endblock ptitle %}
+
+{% block btn %}
+    <a href="{% url 'filemgr:file_upload' %}" class="btn-0 btn btn-sm">upload file</a>
+{% endblock btn %}
+
+
+{% block thead %}
+<th scope="col" class="border-top-0">name</th>
+<th scope="col" class="border-top-0">description</th>
+<th scope="col" class="border-top-0">modified</th>
+<th scope="col" class="border-top-0">user</th>
+<th scope="col" class="border-top-0"></th>
+{% endblock thead %}
+
+
+{% block card %}
+
+<tr>
+    <td><a target="_blank" href="{{ object.download_url }}">{{ object.name }}</a></td>
+    <td class="text-muted">{{ object.description }}</td>
+    <td>{{ object.updated | timesince }}</td>
+    <td>{{ object.user.username }}</td>
+
+	<td>
+		<div class="text-center">
+
+            {% if perms.filemgr.change_file %}
+                <a href="{{ object.staff_edit_url }}" class="btn-block mb-1 btn btn-sm btn-outline-primary">edit</a>
+            {% endif %}
+
+			{% if perms.filemgr.delete_file %}
+				<a href="{{ object.staff_delete_url }}" class="btn-block mb-1 btn btn-sm btn-outline-secondary">delete</a>
+			{% endif %}
+			
+
+		</div>
+	</td>
+</tr>
+
+
+{% endblock card %}
+
+
+
+
+

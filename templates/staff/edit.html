@@ -1,0 +1,14 @@
+{% extends "staff/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Manage" %} {{ model_name }}{% endblock %}
+
+
+{% block ptitle %}
+{% if object %}
+	Edit {{ model_name | lower }} <strong>{{ object.title | truncatewords:9 }}</strong>
+{% else %}
+	Add new{{ model_name | lower }}
+{% endif %}
+{% endblock ptitle %}
+
